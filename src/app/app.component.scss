@@ -1,0 +1,47 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Changer de center à flex-start pour aligner tout en haut */
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  position: relative;
+
+  /* Banner section */
+  .banner {
+    img {
+      width: 100%; /* Occupy full width for the banner */
+      max-width: 800px; /* Adjust the max-width as per your design */
+      margin-top: 0; /* Enlever le margin-top */
+      margin-bottom: 20px; /* Optionnel : ajouter un espace entre la bannière et le contenu */
+    }
+  }
+
+  /* Footer section with links */
+  .footer {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+
+    .footer-link {
+      background-color: #0044b2; /* Blue color */
+      color: white;
+      font-size: 14px;
+      padding: 8px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #003391; /* Slightly darker blue when hovering */
+        text-decoration: none;
+      }
+    }
+  }
+}

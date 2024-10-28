@@ -1,0 +1,124 @@
+.event-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+  
+    /* Banner Section */
+    .banner {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+  
+      img {
+        max-width: 800px;
+        width: 100%;
+      }
+    }
+  
+    /* Navigation Bar */
+    .navbar {
+      background-color: #0044b2;
+      color: white;
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+  
+    /* Search and Filters */
+    .search-filters {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 30px;
+  
+      .filter-button,
+      .advanced-search {
+        padding: 10px 20px;
+        font-size: 14px;
+        background-color: #0044b2;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+  
+        &:hover {
+          background-color: #003391;
+        }
+      }
+  
+      .search-input {
+        padding: 10px;
+        font-size: 14px;
+        width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+    }
+  
+    /* Game Grid */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1000px;
+      width: 100%;
+      padding: 0 20px;
+    }
+  
+    .game-card {
+      border: 1px solid #0044b2;
+      padding: 15px;
+      text-align: center;
+      border-radius: 5px;
+  
+      .game-title {
+        font-size: 18px;
+        color: #0044b2;
+        margin-bottom: 10px;
+      }
+  
+      .game-image {
+        width: 100%;
+        padding-top: 100%; /* Carré */
+        background-color: #eaeaea;
+        margin-bottom: 10px;
+      }
+  
+      .sold-by,
+      .condition,
+      .price {
+        font-size: 14px;
+        color: #333;
+        margin: 5px 0;
+      }
+    }
+  
+    /* Footer Section */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 800px;
+      margin-top: 30px;
+      padding: 0 20px;
+  
+      .footer-link {
+        font-size: 14px;
+        color: #0044b2;
+        text-decoration: none;
+        cursor: pointer;
+  
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  
