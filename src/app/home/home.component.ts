@@ -5,6 +5,7 @@ import { Router } from '@angular/router'; // Importez Router
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html', // Assurez-vous que le chemin est correct
+  styleUrls: ['./home.component.scss'],
   standalone: true,
 })
 export class HomeComponent {
