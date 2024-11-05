@@ -1,0 +1,11 @@
+<div class="search-bar">
+  <button class="search-button" (click)="goToNewSellerComponent()">Nouveau Vendeur</button>
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Entrez le nom ou prénom du vendeur"
+      class="search-input"
+    />
+    <button class="search-button" (click)="goToDepositComponent()">Rechercher</button>
+  </div>
+  

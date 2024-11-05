@@ -1,0 +1,31 @@
+.search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+  
+    .search-input {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #0044b2; /* Couleur de la bordure */
+      border-radius: 5px;
+      outline: none;
+    }
+  
+    .search-button {
+      background-color: #0044b2; /* Couleur bleue */
+      color: white;
+      font-size: 16px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  
+      &:hover {
+        background-color: #003391; /* Couleur légèrement plus foncée au survol */
+      }
+    }
+  }
+  

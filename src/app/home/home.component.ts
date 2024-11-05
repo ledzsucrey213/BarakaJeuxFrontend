@@ -14,4 +14,8 @@ export class HomeComponent {
   goToEventComponent() {
     this.router.navigate(['/event']); // Redirige vers /event
   }
+
+  goToSellerComponent() {
+    this.router.navigate(['/search-seller']); // Redirige vers /search-seller
+  }
 }

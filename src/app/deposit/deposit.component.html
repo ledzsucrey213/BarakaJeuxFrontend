@@ -1,0 +1,59 @@
+<div class="container">
+  <!-- Top Navigation -->
+  <div class="top-nav">
+    <button class="nav-button">DEPOSIT</button>
+    <button class="nav-button">RANDOM EVENT 1</button>
+    <button class="nav-button">ENDS IN __ DAYS</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Left Side Form -->
+    <div class="form-section">
+      <div class="search-bar">
+        <label>Search by name:</label>
+        <input type="text" [(ngModel)]="searchName" placeholder="Enter name">
+      </div>
+      
+      <!-- Condition Dropdown -->
+    <div class="input-group">
+        <label for="condition">Condition:</label>
+        <select id="condition" [(ngModel)]="condition">
+        <option value="New">New</option>
+        <option value="Very Good">Very Good</option>
+        <option value="Good">Good</option>
+        <option value="Poor">Poor</option>
+        </select>
+    </div>
+      
+      <div class="input-group">
+        <label>Fix the price:</label>
+        <input type="number" [(ngModel)]="price" placeholder="0"> €
+      </div>
+      
+      <div class="input-group">
+        <label>Quantity:</label>
+        <input type="number" [(ngModel)]="quantity" placeholder="1">
+      </div>
+      
+      
+    </div>
+
+    <!-- Right Side Registered Games Section -->
+    <div class="registered-games">
+      <h3>Registered games:</h3>
+      <div class="game-entry" *ngFor="let game of [1, 2, 3]"> <!-- Example loop -->
+        <div>Game title: <input type="text"></div>
+        <div>Cost: <input type="number"></div>
+        <div>Quantity: <input type="number"></div>
+        <div>Condition: <input type="text"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Action Buttons -->
+  <div class="bottom-buttons">
+    <button class="action-button" (click)="addGames()">ADD GAMES</button>
+    <button class="action-button" (click)="endDeposit()">END DEPOSIT</button>
+  </div>
+</div>

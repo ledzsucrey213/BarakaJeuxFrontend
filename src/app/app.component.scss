@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Changer de center à flex-start pour aligner tout en haut */
+  justify-content: flex-start; /* Align everything at the top */
   align-items: center;
   height: 100vh;
   text-align: center;
@@ -10,24 +10,24 @@
   /* Banner section */
   .banner {
     img {
-      width: 100%; /* Occupy full width for the banner */
-      max-width: 800px; /* Adjust the max-width as per your design */
-      margin-top: 0; /* Enlever le margin-top */
-      margin-bottom: 20px; /* Optionnel : ajouter un espace entre la bannière et le contenu */
+      width: 100%;
+      max-width: 800px;
+      margin-top: 0;
+      margin-bottom: 20px;
     }
   }
 
   /* Footer section with links */
   .footer {
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
+    position: fixed; /* Use fixed positioning to keep it at the bottom of the viewport */
+    bottom: 10px; /* Distance from the bottom */
+    left: 10px; /* Align to the left side of the page */
+    width: auto; /* Adjust width to fit the content */
     display: flex;
-    justify-content: space-between;
-    padding: 0 20px;
+    align-items: center;
 
     .footer-link {
-      background-color: #0044b2; /* Blue color */
+      background-color: #0044b2;
       color: white;
       font-size: 14px;
       padding: 8px 20px;
@@ -39,7 +39,7 @@
       cursor: pointer;
 
       &:hover {
-        background-color: #003391; /* Slightly darker blue when hovering */
+        background-color: #003391;
         text-decoration: none;
       }
     }
