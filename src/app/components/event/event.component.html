@@ -1,0 +1,26 @@
+<div class="event-container">
+
+  <!-- Navigation bar with event info -->
+  <div class="navbar">
+    <span class="event-title">RANDOM EVENT 1</span>
+    <span class="event-timer">ENDS IN __ DAYS</span>
+  </div>
+
+  <!-- Search and Filters Section -->
+  <div class="search-filters">
+    <button class="filter-button">FILTERS</button>
+    <input type="text" placeholder="Search an article" class="search-input">
+    <button class="advanced-search">Advanced search</button>
+  </div>
+
+  <!-- Game Grid Section -->
+  <div class="game-grid">
+    <div class="game-card" *ngFor="let game of games">
+      <!-- Afficher les données des jeux -->
+      <h3 class="game-title">{{ game.name }}</h3>
+      <p class="game-editor">Editor: <span>{{ game.editor }}</span></p>
+      <p class="game-description">{{ game.description }}</p>
+    </div>
+  </div>
+
+</div>

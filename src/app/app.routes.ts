@@ -1,10 +1,10 @@
 // app.routes.ts
 import { Route } from '@angular/router';
-import { HomeComponent } from './home/home.component'; // Ajustez le chemin si nécessaire
-import { EventComponent } from './event/event.component'; // Assurez-vous que le chemin est correct
-import { SearchSellerComponent } from './search-seller/search-seller.component';
-import { DepositComponent } from './deposit/deposit.component';
-import { NewSellerComponent } from './new-seller/new-seller.component';
+import { HomeComponent } from './components/home/home.component'; // Ajustez le chemin si nécessaire
+import { EventComponent } from './components/event/event.component'; // Assurez-vous que le chemin est correct
+import { SearchSellerComponent } from './components/search-seller/search-seller.component';
+import { DepositComponent } from './components/deposit/deposit.component';
+import { NewSellerComponent } from './components/new-seller/new-seller.component';
 
 export const routes: Route[] = [
   {path: '', component: HomeComponent},
