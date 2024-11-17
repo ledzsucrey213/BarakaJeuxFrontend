@@ -1,0 +1,9 @@
+<div class="game-labels">
+  <div *ngFor="let gameLabel of gameLabels" class="game-label-card">
+    <h3>{{ gameName }}</h3>
+    <p>état: {{ gameLabel.condition }}</p>
+    <p>prix: {{ gameLabel.price }}€</p>
+    <p>Vendu par: {{ sellerNames[gameLabel.sellerId] || 'Chargement du nom du vendeur...' }}</p>
+    <button (click)="addToCart(gameLabel._id)">Ajouter au panier</button>
+  </div>
+</div>

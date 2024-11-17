@@ -18,4 +18,9 @@ export class GameService {
       map((data) => data.map((json) => Game.createFrom(json))) // Mapper les objets JSON
     );
   }
+
+  getGameById(id: string): Observable<Game> {
+    return this.http.get<Game>(`${this.apiUrl}/${id}`).pipe(
+      map((json) => Game.createFrom(json)) // Mapper l'objet JSON au modèle Game
+    ); }
 }

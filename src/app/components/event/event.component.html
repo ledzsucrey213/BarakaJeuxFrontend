@@ -20,6 +20,8 @@
       <h3 class="game-title">{{ game.name }}</h3>
       <p class="game-editor">Editor: <span>{{ game.editor }}</span></p>
       <p class="game-description">{{ game.description }}</p>
+      <p class="game-count">Jeux disponibles: <span>{{ game.count }}</span></p>
+      <button class="select-button" (click)="goToGameComponent(game._id)">Sélectionner</button>
     </div>
   </div>
 

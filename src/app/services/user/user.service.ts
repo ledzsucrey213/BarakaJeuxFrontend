@@ -38,4 +38,9 @@ export class UserService {
     const loginData = { name, password };
     return this.http.post<{ message: string; token: string }>(`${this.apiUrl}/login`, loginData);
   }
+
+  getUserById(id: string): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${id}`).pipe(
+      map((json) => User.createFrom(json)) // Mapper l'objet JSON au modèle Game
+    ); }
 }

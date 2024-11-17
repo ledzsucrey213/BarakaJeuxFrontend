@@ -99,6 +99,20 @@
         color: #333;
         margin: 5px 0;
       }
+
+      .select-button {
+        background-color: #0044b2;
+        color: white;
+        font-size: 14px;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    
+        &:hover {
+          background-color: #003391;
+        }
+      }
     }
   
     /* Footer Section */

@@ -1,11 +1,23 @@
 <div class="search-bar">
   <button class="search-button" (click)="goToNewSellerComponent()">Nouveau Vendeur</button>
-    <input
-      type="text"
-      [(ngModel)]="searchTerm"
-      placeholder="Entrez le nom ou prénom du vendeur"
-      class="search-input"
-    />
-    <button class="search-button" (click)="goToDepositComponent()">Rechercher</button>
+  <input
+    type="text"
+    [(ngModel)]="searchTerm"
+    placeholder="Entrez le nom ou prénom du vendeur"
+    class="search-input"
+  />
+  <button class="search-button" (click)="searchSeller()">Rechercher</button>
+</div>
+
+<!-- Liste des vendeurs -->
+<div class="sellers-container" *ngIf="sellers.length > 0">
+  <div class="seller-card" *ngFor="let seller of sellers">
+    <h3>{{ seller.firstname }} {{ seller.name }}</h3>
+    <p>Email: {{ seller.email }}</p>
+    <p>Adresse: {{ seller.address || 'Non spécifiée' }}</p>
+    <button class="select-button" (click)="selectSeller(seller)">Sélectionner</button>
   </div>
-  
+</div>
+
+<!-- Message si aucun vendeur trouvé -->
+<p *ngIf="sellers.length === 0 && searchTerm">Aucun vendeur trouvé pour "{{ searchTerm }}".</p>

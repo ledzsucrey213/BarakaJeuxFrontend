@@ -1,0 +1,34 @@
+.game-labels {
+    display: flex;
+    flex-wrap: wrap;  /* Permet aux éléments de passer à la ligne suivante lorsque l'espace est insuffisant */
+    gap: 20px;  /* Espacement entre les éléments */
+  }
+  
+  .game-label-card {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 250px;  /* Définir une largeur fixe ou relative pour chaque carte */
+    flex: 1 1 250px;  /* Permet à la carte de se redimensionner selon l'espace disponible, mais de rester au moins à 250px */
+    box-sizing: border-box;  /* Assure que le padding et la bordure sont inclus dans la largeur de l'élément */
+  }
+  
+  .game-label-card h3 {
+    color: #0044b2;
+  }
+  
+  .game-label-card button {
+    background-color: #0044b2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .game-label-card button:hover {
+    background-color: #003391;
+  }
+  

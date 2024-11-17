@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GameService } from '../../services/game/game.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-event',
@@ -13,7 +14,7 @@ import { CommonModule } from '@angular/common';
 export class EventComponent implements OnInit {
   games: any[] = []; // Liste des jeux récupérés depuis le backend
 
-  constructor(private gameService: GameService) {} // Injection du service
+  constructor(private router: Router, private gameService: GameService) {} // Injection du service
 
   ngOnInit(): void {
     this.fetchGames(); // Récupération des données à l'initialisation
@@ -32,4 +33,9 @@ export class EventComponent implements OnInit {
       },
     });    
   }
+
+  goToGameComponent(gameId: string) {
+    this.router.navigate([`/game/${gameId}`]);
+  }
+
 }

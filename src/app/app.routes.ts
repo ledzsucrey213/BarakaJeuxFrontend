@@ -5,6 +5,7 @@ import { EventComponent } from './components/event/event.component'; // Assurez-
 import { SearchSellerComponent } from './components/search-seller/search-seller.component';
 import { DepositComponent } from './components/deposit/deposit.component';
 import { NewSellerComponent } from './components/new-seller/new-seller.component';
+import { GameComponent } from './components/game/game.component';
 
 export const routes: Route[] = [
   {path: '', component: HomeComponent},
@@ -12,4 +13,5 @@ export const routes: Route[] = [
   {path : 'search-seller', component: SearchSellerComponent},
   {path : 'deposit', component : DepositComponent},
   {path : 'new-seller', component : NewSellerComponent},
+  {path : 'game/:id', component : GameComponent},
 ];
