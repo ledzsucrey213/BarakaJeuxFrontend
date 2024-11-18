@@ -1,7 +1,7 @@
 export class GameLabel {
     _id: string; // Ajout de l'attribut _id
-    sellerId: string;
-    gameId: string;
+    seller_id: string;
+    game_id: string;
     price: number;
     eventId: string;
     condition: 'new' | 'very good' | 'good' | 'poor';
@@ -12,8 +12,8 @@ export class GameLabel {
   
     constructor(data: Partial<GameLabel>) {
       this._id = data._id || ''; // Initialisation de _id
-      this.sellerId = data.sellerId || '';
-      this.gameId = data.gameId || '';
+      this.seller_id = data.seller_id || '';
+      this.game_id = data.game_id || '';
       this.price = data.price || 0;
       this.eventId = data.eventId || '';
       this.condition = data.condition || 'new';
@@ -27,8 +27,8 @@ export class GameLabel {
     static createFrom(json: any): GameLabel {
       return new GameLabel({
         _id: json._id, // Inclure l'ID dans la création
-        sellerId: json.seller_id,
-        gameId: json.game_id,
+        seller_id: json.seller_id,
+        game_id: json.game_id,
         price: json.price,
         eventId: json.event_id,
         condition: json.condition,

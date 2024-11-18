@@ -4,8 +4,8 @@ describe('GameLabel', () => {
   it('should create an instance with provided values', () => {
     const gameLabelData = {
       _id: '60f5c3b2f7a7f0d2b4db5d91',  // Ajout de _id
-      sellerId: '12345',
-      gameId: '67890',
+      seller_id: '12345',
+      game_id: '67890',
       price: 100,
       eventId: '54321',
       condition: 'new' as 'new' | 'very good' | 'good' | 'poor',
@@ -19,8 +19,8 @@ describe('GameLabel', () => {
 
     expect(gameLabel).toBeTruthy();
     expect(gameLabel._id).toBe('60f5c3b2f7a7f0d2b4db5d91');  // Vérification de _id
-    expect(gameLabel.sellerId).toBe('12345');
-    expect(gameLabel.gameId).toBe('67890');
+    expect(gameLabel.seller_id).toBe('12345');
+    expect(gameLabel.game_id).toBe('67890');
     expect(gameLabel.price).toBe(100);
     expect(gameLabel.eventId).toBe('54321');
     expect(gameLabel.condition).toBe('new');
@@ -48,8 +48,8 @@ describe('GameLabel', () => {
 
     expect(gameLabel).toBeTruthy();
     expect(gameLabel._id).toBe('60f5c3b2f7a7f0d2b4db5d92');  // Vérification de _id
-    expect(gameLabel.sellerId).toBe('11111');
-    expect(gameLabel.gameId).toBe('22222');
+    expect(gameLabel.seller_id).toBe('11111');
+    expect(gameLabel.game_id).toBe('22222');
     expect(gameLabel.price).toBe(150);
     expect(gameLabel.eventId).toBe('33333');
     expect(gameLabel.condition).toBe('very good');
@@ -71,8 +71,8 @@ describe('GameLabel', () => {
 
     expect(gameLabel).toBeTruthy();
     expect(gameLabel._id).toBe('60f5c3b2f7a7f0d2b4db5d93');  // Vérification de _id
-    expect(gameLabel.sellerId).toBe('99999');
-    expect(gameLabel.gameId).toBe(''); // Valeur par défaut
+    expect(gameLabel.seller_id).toBe('99999');
+    expect(gameLabel.game_id).toBe(''); // Valeur par défaut
     expect(gameLabel.price).toBe(50);
     expect(gameLabel.eventId).toBe(''); // Valeur par défaut
     expect(gameLabel.condition).toBe('poor');
@@ -87,8 +87,8 @@ describe('GameLabel', () => {
 
     expect(gameLabel).toBeTruthy();
     expect(gameLabel._id).toBe('');  // Vérification de _id (valeur par défaut)
-    expect(gameLabel.sellerId).toBe('');
-    expect(gameLabel.gameId).toBe('');
+    expect(gameLabel.seller_id).toBe('');
+    expect(gameLabel.game_id).toBe('');
     expect(gameLabel.price).toBe(0);
     expect(gameLabel.eventId).toBe('');
     expect(gameLabel.condition).toBe('new'); // Valeur par défaut

@@ -19,7 +19,7 @@ export class GameComponent implements OnInit {
   gameLabels: GameLabel[] = [];
   gameId: string = '';
   gameName: string = '';  // Variable pour stocker le nom du jeu
-  sellerNames: { [key: string]: string } = {};  // Dictionnaire pour stocker le nom du vendeur par sellerId
+  sellerNames: { [key: string]: string } = {};  // Dictionnaire pour stocker le nom du vendeur par seller_id
 
   constructor(
     private route: ActivatedRoute,
@@ -51,16 +51,16 @@ export class GameComponent implements OnInit {
   }
 
   // Méthode pour récupérer le nom complet du vendeur (nom + prénom)
-  fetchSellerName(sellerId: string): void {
-    console.log(`Fetching seller for sellerId: ${sellerId}`);  // Log pour vérifier si le sellerId est bien passé
-    this.userService.getUserById(sellerId).subscribe({
+  fetchSellerName(seller_id: string): void {
+    console.log(`Fetching seller for seller_id: ${seller_id}`);  // Log pour vérifier si le seller_id est bien passé
+    this.userService.getUserById(seller_id).subscribe({
       next: (seller: User) => {
         console.log(`Seller found: ${seller.name} ${seller.firstname}`);  // Vérifiez les données du vendeur
-        this.sellerNames[sellerId] = `${seller.name} ${seller.firstname}`;
+        this.sellerNames[seller_id] = `${seller.name} ${seller.firstname}`;
         this.cdr.detectChanges();  // Assurez-vous que la vue est mise à jour après modification
       },
       error: (error) => {
-        console.error(`Erreur lors de la récupération du vendeur avec ID ${sellerId}:`, error);
+        console.error(`Erreur lors de la récupération du vendeur avec ID ${seller_id}:`, error);
       },
     });
   }
@@ -74,9 +74,9 @@ export class GameComponent implements OnInit {
 
         // Pour chaque GameLabel, récupérer le nom du vendeur et le stocker
         this.gameLabels.forEach((gameLabel) => {
-          if (gameLabel.sellerId) {
-            console.log(`Fetching seller for gameLabel ID: ${gameLabel._id}, sellerId: ${gameLabel.sellerId}`);
-            this.fetchSellerName(gameLabel.sellerId);  // Récupérer le nom du vendeur
+          if (gameLabel.seller_id) {
+            console.log(`Fetching seller for gameLabel ID: ${gameLabel._id}, seller_id: ${gameLabel.seller_id}`);
+            this.fetchSellerName(gameLabel.seller_id);  // Récupérer le nom du vendeur
           }
           else {console.log(`Fail`)}
         });
