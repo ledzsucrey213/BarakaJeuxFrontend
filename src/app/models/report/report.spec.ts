@@ -19,7 +19,7 @@ describe('Report Model', () => {
       seller_id: 'seller123',
       total_earned: 150.50,
       total_due: 20.00,
-      report_date: '2024-11-17T00:00:00Z',
+      report_date: new Date('2024-11-17T00:00:00Z'),
       event_id: 'event123',
       stock_id: 'stock123',
     };
