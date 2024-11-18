@@ -1,4 +1,4 @@
-import { Report } from './report.model';
+import { Report } from "./report";
 
 describe('Report Model', () => {
   it('should create an empty Report instance', () => {
