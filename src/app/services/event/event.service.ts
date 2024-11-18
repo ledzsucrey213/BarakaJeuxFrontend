@@ -20,7 +20,7 @@ export class EventService {
   }
 
   getEventActive(): Observable<Event> {
-    return this.http.get<Event>(`${this.apiUrl}/isActive}`).pipe(
+    return this.http.get<Event>(`${this.apiUrl}/isActive`).pipe(
       map((json) => Event.createFrom(json)) // Mapper l'objet JSON au modèle Game
     ); }
 }
