@@ -2,8 +2,8 @@
   <!-- Top Navigation -->
   <div class="top-nav">
     <button class="nav-button">DEPOSIT</button>
-    <button class="nav-button">RANDOM EVENT 1</button>
-    <button class="nav-button">ENDS IN __ DAYS</button>
+    <button class="nav-button">{{ this.eventName }}</button>
+    <button class="nav-button">ENDS IN {{this.remainingTime}} </button>
   </div>
 
   <!-- Main Content -->
@@ -14,39 +14,37 @@
         <label>Search by name:</label>
         <input type="text" [(ngModel)]="searchName" placeholder="Enter name">
       </div>
-      
+
       <!-- Condition Dropdown -->
-    <div class="input-group">
+      <div class="input-group">
         <label for="condition">Condition:</label>
         <select id="condition" [(ngModel)]="condition">
-        <option value="New">New</option>
-        <option value="Very Good">Very Good</option>
-        <option value="Good">Good</option>
-        <option value="Poor">Poor</option>
+          <option value="New">New</option>
+          <option value="Very Good">Very Good</option>
+          <option value="Good">Good</option>
+          <option value="Poor">Poor</option>
         </select>
-    </div>
-      
+      </div>
+
       <div class="input-group">
         <label>Fix the price:</label>
         <input type="number" [(ngModel)]="price" placeholder="0"> €
       </div>
-      
-      <div class="input-group">
-        <label>Quantity:</label>
-        <input type="number" [(ngModel)]="quantity" placeholder="1">
-      </div>
-      
-      
     </div>
 
     <!-- Right Side Registered Games Section -->
     <div class="registered-games">
       <h3>Registered games:</h3>
-      <div class="game-entry" *ngFor="let game of [1, 2, 3]"> <!-- Example loop -->
-        <div>Game title: <input type="text"></div>
-        <div>Cost: <input type="number"></div>
-        <div>Quantity: <input type="number"></div>
-        <div>Condition: <input type="text"></div>
+      <!-- Si aucun jeu enregistré -->
+      <div *ngIf="gameLabels.length === 0" class="empty-list">
+        <p>No registered games available.</p>
+      </div>
+
+      <!-- Liste des jeux enregistrés -->
+      <div *ngFor="let gameLabel of gameLabels" class="game-entry">
+        <div>Game title </div>
+        <div>Cost: {{ gameLabel.price }} €</div>
+        <div>Condition: {{ gameLabel.condition }}</div>
       </div>
     </div>
   </div>

@@ -15,7 +15,7 @@
     <h3>{{ seller.firstname }} {{ seller.name }}</h3>
     <p>Email: {{ seller.email }}</p>
     <p>Adresse: {{ seller.address || 'Non spécifiée' }}</p>
-    <button class="select-button" (click)="selectSeller(seller)">Sélectionner</button>
+    <button class="select-button" (click)="selectSeller(seller._id)">Sélectionner</button>
   </div>
 </div>
 

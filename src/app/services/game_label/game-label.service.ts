@@ -19,4 +19,9 @@ export class GameLabelService {
   getGameLabelsByGameId(gameId: string): Observable<GameLabel[]> {
     return this.http.get<GameLabel[]>(`${this.apiUrl}/game/${gameId}`);
   }
+
+  getGameLabelsBySellerId(sellerId: string): Observable<GameLabel[]> {
+    return this.http.get<GameLabel[]>(`${this.apiUrl}/seller/${sellerId}`);
+  }
+
 }

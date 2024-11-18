@@ -4,7 +4,7 @@ describe('User', () => {
   it('should create an instance with default values', () => {
     const user = new User({});
     expect(user).toBeTruthy();
-    expect(user.id).toBe('');
+    expect(user._id).toBe('');
     expect(user.firstname).toBe('');
     expect(user.name).toBe('');
     expect(user.email).toBe('');
@@ -26,7 +26,7 @@ describe('User', () => {
     const user = new User(userData);
 
     expect(user).toBeTruthy();
-    expect(user.id).toBe('123');
+    expect(user._id).toBe('123');
     expect(user.firstname).toBe('John');
     expect(user.name).toBe('Doe');
     expect(user.email).toBe('john.doe@example.com');
@@ -47,7 +47,7 @@ describe('User', () => {
     const user = User.createFrom(jsonData);
 
     expect(user).toBeTruthy();
-    expect(user.id).toBe('456');
+    expect(user._id).toBe('456');
     expect(user.firstname).toBe('Jane');
     expect(user.name).toBe('Smith');
     expect(user.email).toBe('jane.smith@example.com');

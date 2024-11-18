@@ -11,7 +11,7 @@ export const routes: Route[] = [
   {path: '', component: HomeComponent},
   {path: 'event', component: EventComponent},
   {path : 'search-seller', component: SearchSellerComponent},
-  {path : 'deposit', component : DepositComponent},
+  {path : 'deposit/:id', component : DepositComponent},
   {path : 'new-seller', component : NewSellerComponent},
   {path : 'game/:id', component : GameComponent},
 ];

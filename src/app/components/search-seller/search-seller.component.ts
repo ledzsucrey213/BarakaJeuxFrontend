@@ -37,9 +37,8 @@ export class SearchSellerComponent {
     });    
   }
 
-  selectSeller(seller: User) {
-    console.log(`Vendeur sélectionné : ${seller.firstname} ${seller.name}`);
-    this.router.navigate(['/deposit']);
+  selectSeller(sellerId: string) {
+    this.router.navigate([`/deposit/${sellerId}`]);
     // Ajoutez ici la logique pour la sélection du vendeur
   }
 
