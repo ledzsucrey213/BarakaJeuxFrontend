@@ -10,7 +10,8 @@ import { GameService } from '../../services/game/game.service';
 import { Game } from '../../models/game/game';
 import { EventService } from '../../services/event/event.service';
 import { Event } from '../../models/event/event';
-import { debounceTime, Subject } from 'rxjs';
+import { forkJoin, debounceTime, Subject } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-deposit',
@@ -23,17 +24,20 @@ import { debounceTime, Subject } from 'rxjs';
 export class DepositComponent implements OnInit, OnDestroy {
   gameLabels: GameLabel[] = [];
   sellerId: string = '';
+  eventId: string = '';
   eventName: string = '';  // Variable pour stocker le nom du jeu
   searchName: string = ''; 
   price: number | null = null; 
   quantity: number | null = null; 
-  condition: string = 'New';
+  condition: string = 'new';
   gamesNames: { [key: string]: string } = {};
   remainingTime: string = '';
   private timer: any; // Pour stocker l'identifiant du setInterval
   allGames: Game[] = [];
   filteredGames: Game[] = []; // Jeux filtrés pour l'affichage
   searchSubject: Subject<string> = new Subject<string>();
+  addedGamesLabels: Omit<GameLabel, '_id'>[] = []; // Tableau pour les GameLabels ajoutés
+
 
   constructor(
     private route: ActivatedRoute,
@@ -67,6 +71,7 @@ export class DepositComponent implements OnInit, OnDestroy {
     this.eventService.getEventActive().subscribe({
       next: (session: Event) => {
         this.eventName = session.name;  // Stocker le nom de la session
+        this.eventId = session._id;
         console.log(`Fetching game for event_id ${session._id}`);
         this.calculateRemainingTime(new Date(session.end)); // Calcul initial
 
@@ -118,10 +123,6 @@ export class DepositComponent implements OnInit, OnDestroy {
       },
     });
   }
-
-  addGames(): void {}
-
-  endDeposit(): void {}
 
   // Méthode pour calculer le temps restant
   calculateRemainingTime(endDate: Date): void {
@@ -190,4 +191,90 @@ export class DepositComponent implements OnInit, OnDestroy {
     this.filteredGames = []; // Vider la liste après la sélection
     console.log('Jeu sélectionné :', game); // Debugging
   }
+
+
+
+  addGames(): void {
+    if (!this.searchName || !this.price || !this.condition) {
+      console.error('Tous les champs doivent être remplis pour ajouter un jeu.');
+      return;
+    }
+
+  
+    // Trouver l'ID du jeu sélectionné
+    const selectedGame = this.allGames.find(game => game.name === this.searchName);
+  
+    if (!selectedGame) {
+      console.error('Jeu sélectionné introuvable.');
+      return;
+    }
+  
+    // Création du nouvel objet GameLabel
+    const newGameLabel: Omit<GameLabel, '_id'> = {
+      seller_id: this.sellerId,
+      game_id: selectedGame._id,
+      price: this.price,
+      event_id: this.eventId, // Remplacer par l'ID réel de l'event
+      condition: this.condition as 'new' | 'very good' | 'good' | 'poor',
+      deposit_fee: 5, // Valeur par défaut
+      is_Sold: false,
+      creation: new Date(),
+      is_On_Sale: true,
+    };
+  
+    // Ajouter au tableau des jeux ajoutés
+    this.addedGamesLabels.push(newGameLabel);
+  
+    // Réinitialiser les champs du formulaire
+    this.searchName = '';
+    this.price = null;
+    this.condition = 'New';
+  
+    console.log('Jeu ajouté :', newGameLabel);
+  }
+
+
+  endDeposit(): void {
+    console.log('Début du dépôt');
+  
+    if (this.addedGamesLabels.length === 0) {
+      console.warn('Aucun jeu à déposer.');
+      return;
+    }
+  
+    const updateGameObservables = this.addedGamesLabels.map((gameLabel) => {
+      // Récupérer le jeu correspondant via l'ID
+      return this.gameService.getGameById(gameLabel.game_id).pipe(
+        // Une fois le jeu récupéré, préparer la mise à jour
+        switchMap((gameToUpdate: Game) => {
+          const updatedGame: Partial<Game> = { count: (gameToUpdate.count || 0) + 1 };
+          return this.gameService.updateGame(gameToUpdate._id, updatedGame); // Retourne un Observable
+        })
+      );
+    });
+  
+    // Exécuter toutes les mises à jour des jeux
+    forkJoin(updateGameObservables).subscribe({
+      next: () => {
+        console.log('Tous les jeux ont été mis à jour.');
+  
+        // Une fois les jeux mis à jour, déposer les GameLabels
+        this.gameLabelService.postGameLabels(this.addedGamesLabels).subscribe({
+          next: (response) => {
+            console.log('Jeux déposés avec succès :', response);
+            this.addedGamesLabels = []; // Réinitialiser après le dépôt
+          },
+          error: (error) => {
+            console.error('Erreur lors du dépôt des jeux :', error);
+          },
+        });
+      },
+      error: (error) => {
+        console.error('Erreur lors de la mise à jour des jeux :', error);
+      },
+    });
+  }
+  
+  
+  
 }

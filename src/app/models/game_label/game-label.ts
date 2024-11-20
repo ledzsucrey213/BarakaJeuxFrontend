@@ -1,26 +1,26 @@
 export class GameLabel {
-    _id: string; // Ajout de l'attribut _id
+    _id: string;
     seller_id: string;
     game_id: string;
     price: number;
-    eventId: string;
+    event_id: string;
     condition: 'new' | 'very good' | 'good' | 'poor';
-    depositFee: number;
-    isSold: boolean;
+    deposit_fee: number;
+    is_Sold: boolean;
     creation: Date;
-    isOnSale: boolean;
+    is_On_Sale: boolean;
   
     constructor(data: Partial<GameLabel>) {
       this._id = data._id || ''; // Initialisation de _id
       this.seller_id = data.seller_id || '';
       this.game_id = data.game_id || '';
       this.price = data.price || 0;
-      this.eventId = data.eventId || '';
+      this.event_id = data.event_id || '';
       this.condition = data.condition || 'new';
-      this.depositFee = data.depositFee || 0;
-      this.isSold = data.isSold || false;
+      this.deposit_fee = data.deposit_fee || 0;
+      this.is_Sold = data.is_Sold || false;
       this.creation = data.creation ? new Date(data.creation) : new Date();
-      this.isOnSale = data.isOnSale !== undefined ? data.isOnSale : true;
+      this.is_On_Sale = data.is_On_Sale !== undefined ? data.is_On_Sale : true;
     }
   
     // Méthode pour créer une instance de GameLabel à partir d'un objet JSON
@@ -30,12 +30,12 @@ export class GameLabel {
         seller_id: json.seller_id,
         game_id: json.game_id,
         price: json.price,
-        eventId: json.event_id,
+        event_id: json.event_id,
         condition: json.condition,
-        depositFee: json.deposit_fee,
-        isSold: json.is_Sold,
+        deposit_fee: json.deposit_fee,
+        is_Sold: json.is_Sold,
         creation: json.creation,
-        isOnSale: json.is_On_Sale,
+        is_On_Sale: json.is_On_Sale,
       });
     }
 }

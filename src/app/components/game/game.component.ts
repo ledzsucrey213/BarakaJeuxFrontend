@@ -71,7 +71,7 @@ export class GameComponent implements OnInit {
     this.gameLabelService.getGameLabelsByGameId(gameId).subscribe({
       next: (data) => {
         // récupérer seulement les jeux en vente
-        this.gameLabels = data.filter((gameLabel) => gameLabel.isOnSale);
+        this.gameLabels = data.filter((gameLabel) => gameLabel.is_On_Sale);
 
         // Pour chaque GameLabel, récupérer le nom du vendeur et le stocker
         this.gameLabels.forEach((gameLabel) => {

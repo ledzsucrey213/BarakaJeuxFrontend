@@ -24,7 +24,7 @@ export class GameLabelService {
     return this.http.get<GameLabel[]>(`${this.apiUrl}/seller/${sellerId}`);
   }
 
-  postGameLabels(gameLabels: GameLabel[]): Observable<GameLabel[]> {
+  postGameLabels(gameLabels: Omit<GameLabel, '_id'>[]): Observable<GameLabel[]> {
     return this.http.post<GameLabel[]>(`${this.apiUrl}/deposit`, gameLabels);
   }
   

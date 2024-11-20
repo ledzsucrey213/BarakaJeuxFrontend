@@ -12,7 +12,7 @@ describe('GameLabel', () => {
       depositFee: 20,
       isSold: false,
       creation: new Date('2024-11-15T10:00:00Z'),
-      isOnSale: true,
+      is_On_Sale: true,
     };
 
     const gameLabel = new GameLabel(gameLabelData);
@@ -22,12 +22,12 @@ describe('GameLabel', () => {
     expect(gameLabel.seller_id).toBe('12345');
     expect(gameLabel.game_id).toBe('67890');
     expect(gameLabel.price).toBe(100);
-    expect(gameLabel.eventId).toBe('54321');
+    expect(gameLabel.event_id).toBe('54321');
     expect(gameLabel.condition).toBe('new');
-    expect(gameLabel.depositFee).toBe(20);
-    expect(gameLabel.isSold).toBe(false);
+    expect(gameLabel.deposit_fee).toBe(20);
+    expect(gameLabel.is_Sold).toBe(false);
     expect(gameLabel.creation).toEqual(new Date('2024-11-15T10:00:00Z'));
-    expect(gameLabel.isOnSale).toBe(true);
+    expect(gameLabel.is_On_Sale).toBe(true);
   });
 
   it('should create an instance with default values when using createFrom', () => {
@@ -51,12 +51,12 @@ describe('GameLabel', () => {
     expect(gameLabel.seller_id).toBe('11111');
     expect(gameLabel.game_id).toBe('22222');
     expect(gameLabel.price).toBe(150);
-    expect(gameLabel.eventId).toBe('33333');
+    expect(gameLabel.event_id).toBe('33333');
     expect(gameLabel.condition).toBe('very good');
-    expect(gameLabel.depositFee).toBe(25);
-    expect(gameLabel.isSold).toBe(true);
+    expect(gameLabel.deposit_fee).toBe(25);
+    expect(gameLabel.is_Sold).toBe(true);
     expect(gameLabel.creation).toEqual(new Date('2024-11-14T09:30:00Z'));
-    expect(gameLabel.isOnSale).toBe(false);
+    expect(gameLabel.is_On_Sale).toBe(false);
   });
 
   it('should create an instance with default values when properties are missing', () => {
@@ -74,12 +74,12 @@ describe('GameLabel', () => {
     expect(gameLabel.seller_id).toBe('99999');
     expect(gameLabel.game_id).toBe(''); // Valeur par défaut
     expect(gameLabel.price).toBe(50);
-    expect(gameLabel.eventId).toBe(''); // Valeur par défaut
+    expect(gameLabel.event_id).toBe(''); // Valeur par défaut
     expect(gameLabel.condition).toBe('poor');
-    expect(gameLabel.depositFee).toBe(0); // Valeur par défaut
-    expect(gameLabel.isSold).toBe(false); // Valeur par défaut
+    expect(gameLabel.deposit_fee).toBe(0); // Valeur par défaut
+    expect(gameLabel.is_Sold).toBe(false); // Valeur par défaut
     expect(gameLabel.creation).toBeTruthy(); // La date actuelle
-    expect(gameLabel.isOnSale).toBe(true); // Valeur par défaut
+    expect(gameLabel.is_On_Sale).toBe(true); // Valeur par défaut
   });
 
   it('should create an instance with all default values when empty data is provided', () => {
@@ -90,11 +90,11 @@ describe('GameLabel', () => {
     expect(gameLabel.seller_id).toBe('');
     expect(gameLabel.game_id).toBe('');
     expect(gameLabel.price).toBe(0);
-    expect(gameLabel.eventId).toBe('');
+    expect(gameLabel.event_id).toBe('');
     expect(gameLabel.condition).toBe('new'); // Valeur par défaut
-    expect(gameLabel.depositFee).toBe(0);
-    expect(gameLabel.isSold).toBe(false);
+    expect(gameLabel.deposit_fee).toBe(0);
+    expect(gameLabel.is_Sold).toBe(false);
     expect(gameLabel.creation).toBeTruthy(); // La date actuelle
-    expect(gameLabel.isOnSale).toBe(true);
+    expect(gameLabel.is_On_Sale).toBe(true);
   });
 });

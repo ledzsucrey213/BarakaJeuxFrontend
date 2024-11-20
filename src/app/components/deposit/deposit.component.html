@@ -8,18 +8,21 @@
 
   <!-- Main Content -->
   <div class="main-content">
-    <!-- Left Side Form -->
+    <!-- Left Side: Form Section -->
     <div class="form-section">
+      <h3>Add a game to deposit:</h3>
+
+      <!-- Search Bar -->
       <div class="search-bar">
         <label>Search by name:</label>
-        <input 
-          type="text" 
-          [(ngModel)]="searchName" 
-          placeholder="Enter name"
+        <input
+          type="text"
+          [(ngModel)]="searchName"
+          placeholder="Enter game name"
           (input)="onSearchChange()"
         />
-        
-        <!-- Liste déroulante des résultats de recherche -->
+
+        <!-- Dropdown for Search Results -->
         <div *ngIf="filteredGames.length > 0 && searchName.length > 0" class="search-results">
           <div 
             *ngFor="let game of filteredGames" 
@@ -35,41 +38,61 @@
       <div class="input-group">
         <label for="condition">Condition:</label>
         <select id="condition" [(ngModel)]="condition">
-          <option value="New">New</option>
-          <option value="Very Good">Very Good</option>
-          <option value="Good">Good</option>
-          <option value="Poor">Poor</option>
+          <option value="new">New</option>
+          <option value="very good">Very Good</option>
+          <option value="good">Good</option>
+          <option value="poor">Poor</option>
         </select>
       </div>
 
-      <!-- Input pour le prix -->
+      <!-- Input for Price -->
       <div class="input-group">
         <label>Fix the price:</label>
         <input type="number" [(ngModel)]="price" placeholder="0"> €
       </div>
+
+      <!-- Add Game Button -->
+      <button class="action-button" (click)="addGames()">ADD GAME</button>
     </div>
 
-    <!-- Right Side Registered Games Section -->
-    <div class="registered-games">
-      <h3>Registered games:</h3>
+    <!-- Right Side: Registered and Added Games Section -->
+    <div class="games-section">
+      <div class="registered-games">
+        <h3>Registered games:</h3>
 
-      <!-- Si aucun jeu enregistré -->
-      <div *ngIf="gameLabels.length === 0" class="empty-list">
-        <p>No registered games available.</p>
+        <!-- If no registered games -->
+        <div *ngIf="gameLabels.length === 0" class="empty-list">
+          <p>No registered games available.</p>
+        </div>
+
+        <!-- List of registered games -->
+        <div *ngFor="let gameLabel of gameLabels" class="game-entry">
+          <div>Game title: {{ gamesNames[gameLabel.game_id] }}</div>
+          <div>Cost: {{ gameLabel.price }} €</div>
+          <div>Condition: {{ gameLabel.condition }}</div>
+        </div>
       </div>
 
-      <!-- Liste des jeux enregistrés -->
-      <div *ngFor="let gameLabel of gameLabels" class="game-entry">
-        <div>Game title: {{ gamesNames[gameLabel.game_id] }}</div>
-        <div>Cost: {{ gameLabel.price }} €</div>
-        <div>Condition: {{ gameLabel.condition }}</div>
+      <div class="added-games">
+        <h3>Games to deposit:</h3>
+
+        <!-- If no games added -->
+        <div *ngIf="addedGamesLabels.length === 0" class="empty-list">
+          <p>No games added yet.</p>
+        </div>
+
+        <!-- List of added games -->
+        <div *ngFor="let gameLabel of addedGamesLabels" class="game-entry">
+          <div>Game title: {{ gamesNames[gameLabel.game_id] }}</div>
+          <div>Price: {{ gameLabel.price }} €</div>
+          <div>Condition: {{ gameLabel.condition }}</div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Bottom Action Buttons -->
   <div class="bottom-buttons">
-    <button class="action-button" (click)="addGames()">ADD GAMES</button>
     <button class="action-button" (click)="endDeposit()">END DEPOSIT</button>
   </div>
 </div>

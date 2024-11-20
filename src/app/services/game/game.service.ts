@@ -23,4 +23,9 @@ export class GameService {
     return this.http.get<Game>(`${this.apiUrl}/${id}`).pipe(
       map((json) => Game.createFrom(json)) // Mapper l'objet JSON au modèle Game
     ); }
+
+  updateGame(gameId: string, updatedGame: Partial<Game>): Observable<Game> {
+    const url = `${this.apiUrl}/${gameId}`; // URL de la ressource à mettre à jour
+    return this.http.put<Game>(url, updatedGame);
+  }
 }
