@@ -1,0 +1,48 @@
+<div class="container">
+  <!-- Top Navigation -->
+  <div class="top-nav">
+    <button class="nav-button">Total stocks</button>
+    <button class="nav-button">{{ eventName }}</button>
+    <button class="nav-button">ENDS IN {{ remainingTime }}</button>
+  </div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <!-- Left Side: Games In Stock -->
+  <div class="games-section">
+    <div class="registered-games">
+      <h3>Games in stock: {{ gamesInStock.length }}</h3>
+
+      <!-- If no registered games -->
+      <div *ngIf="gamesInStock.length === 0" class="empty-list">
+        <p>No games in stock</p>
+      </div>
+
+      <!-- List of registered games -->
+      <div *ngFor="let gameLabel of gamesInStock" class="game-entry">
+        <div>Game title: {{ gamesNames[gameLabel.game_id] }}</div>
+        <div>Cost: {{ gameLabel.price }} €</div>
+        <div>Condition: {{ gameLabel.condition }}</div>
+      </div>
+    </div>
+  </div> <!-- Properly closes the left side -->
+
+  <!-- Right Side: Games Sold -->
+  <div class="games-section">
+    <div class="registered-games">
+      <h3>Games sold: {{ gamesSold.length }}</h3>
+
+      <!-- If no registered games -->
+      <div *ngIf="gamesSold.length === 0" class="empty-list">
+        <p>No games sold</p>
+      </div>
+
+      <!-- List of registered games -->
+      <div *ngFor="let gameLabel of gamesSold" class="game-entry">
+        <div>Game title: {{ gamesNames[gameLabel.game_id] }}</div>
+        <div>Cost: {{ gameLabel.price }} €</div>
+        <div>Condition: {{ gameLabel.condition }}</div>
+      </div>
+    </div>
+  </div>
+</div>

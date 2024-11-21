@@ -16,7 +16,8 @@ export class stockService {
     return this.http.get(`${this.apiUrl}`); // Requête pour récupérer tous les game_labels
   }
 
-  getStocksByClientId(sellerId: string): Observable<Stock[]> {
-    return this.http.get<Stock[]>(`${this.apiUrl}/seller/${sellerId}`);
+  getStocksByClientId(sellerId: string): Observable<Stock> {
+    return this.http.get<Stock>(`${this.apiUrl}/seller/${sellerId}`);
   }
+
 }

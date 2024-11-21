@@ -109,7 +109,7 @@ export class DepositComponent implements OnInit, OnDestroy {
         this.gameLabels.forEach((gameLabel) => {
           if (gameLabel.game_id) {
             console.log(`Fetching game for gameLabel ID: ${gameLabel._id}, game_id: ${gameLabel.game_id}`);
-            this.fetchGameName(gameLabel.game_id);  // Récupérer le nom du vendeur
+            this.fetchGameName(gameLabel.game_id);  // Récupérer le nom du jeu
           } else {
             console.log(`Fail`);
           }
