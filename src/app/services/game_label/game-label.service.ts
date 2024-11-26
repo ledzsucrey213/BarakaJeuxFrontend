@@ -16,6 +16,11 @@ export class GameLabelService {
     return this.http.get(`${this.apiUrl}`); // Requête pour récupérer tous les game_labels
   }
 
+  getGameLabelById(id: string): Observable<GameLabel> {
+    return this.http.get<GameLabel>(`${this.apiUrl}/${id}`).pipe(
+      map((json) => GameLabel.createFrom(json)) // Mapper l'objet JSON au modèle Game
+    ); }
+
   getGameLabelsByGameId(gameId: string): Observable<GameLabel[]> {
     return this.http.get<GameLabel[]>(`${this.apiUrl}/game/${gameId}`);
   }

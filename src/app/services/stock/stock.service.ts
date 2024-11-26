@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'; 
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -12,11 +12,24 @@ export class stockService {
 
   constructor(private http: HttpClient) {}
 
-  getStocks(): Observable<any> {
-    return this.http.get(`${this.apiUrl}`); // Requête pour récupérer tous les game_labels
+  // Pour récupérer plusieurs stocks (tableau)
+  getStocks(): Observable<Stock[]> {
+    return this.http.get<any[]>(`${this.apiUrl}`).pipe(
+      map((data) => data.map((stock) => Stock.createFrom(stock)))
+    );
   }
 
-  getStocksByClientId(sellerId: string): Observable<Stock[]> {
-    return this.http.get<Stock[]>(`${this.apiUrl}/seller/${sellerId}`);
+  // Pour récupérer un seul stock par son ID
+  getStockById(id: string): Observable<Stock> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+      map((data) => Stock.createFrom(data))
+    );
+  }
+
+  // Pour récupérer un stock par sellerId
+  getStocksByClientId(sellerId: string): Observable<Stock> {
+    return this.http.get<any>(`${this.apiUrl}/seller/${sellerId}`).pipe(
+      map((data) => Stock.createFrom(data))
+    );
   }
 }

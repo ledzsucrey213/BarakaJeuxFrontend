@@ -18,4 +18,8 @@ export class HomeComponent {
   goToSellerComponent() {
     this.router.navigate(['/search-seller']); // Redirige vers /search-seller
   }
+
+  goToStock() {
+    this.router.navigate(['/stock']); // Redirige vers /stoch
+  }
 }

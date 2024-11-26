@@ -7,6 +7,7 @@ import { DepositComponent } from './components/deposit/deposit.component';
 import { NewSellerComponent } from './components/new-seller/new-seller.component';
 import { GameComponent } from './components/game/game.component';
 import { SaleComponent } from './components/sale/sale.component';
+import { StockComponent } from './components/stock/stock.component';
 
 export const routes: Route[] = [
   {path: '', component: HomeComponent},
@@ -16,4 +17,5 @@ export const routes: Route[] = [
   {path : 'deposit/:id', component : DepositComponent},
   {path : 'new-seller', component : NewSellerComponent},
   {path : 'game/:id', component : GameComponent},
+  {path : 'stock/:id', component : StockComponent},
 ];
