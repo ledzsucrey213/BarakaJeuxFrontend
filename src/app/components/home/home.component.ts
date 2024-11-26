@@ -12,7 +12,7 @@ export class HomeComponent {
   constructor(private router: Router) {} // Injectez le Router
 
   goToEventComponent() {
-    this.router.navigate(['/event']); // Redirige vers /event
+    this.router.navigate(['/sale']); // Redirige vers /event
   }
 
   goToSellerComponent() {

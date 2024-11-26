@@ -1,0 +1,75 @@
+<div class="container">
+    <!-- Top Navigation -->
+    <div class="top-nav">
+      <button class="nav-button">Checkout</button>
+      <button class="nav-button">{{ eventName }}</button>
+      <button class="nav-button">ENDS IN {{ remainingTime }}</button>
+    </div>
+  
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Conteneur pour le titre et la barre de recherche -->
+      <div class="header-container">
+        <h2>Your cart:</h2>
+  
+        <!-- Search Bar -->
+        <div class="search-bar">
+          <input
+            type="text"
+            [(ngModel)]="searchName"
+            placeholder="Entrer le nom du jeu"
+            (input)="onSearchChange()"
+          />
+          <img src="scan.png" alt="Scan" class="search-icon" />
+  
+          <!-- Dropdown for Search Results -->
+          <div *ngIf="dropdownVisible && filteredGames.length > 0 && searchName.length > 0" class="search-results">
+            <div 
+              *ngFor="let game of filteredGames" 
+              class="search-result"
+            >
+              <p>
+                <strong>{{ gamesNames[game.game_id] || 'Loading...' }}</strong>
+              </p>
+              <p>Price: {{ game.price }} €</p>
+              <p>Condition: {{ game.condition }}</p>
+              <button class="cart-button" (click)="addToCart(game)">Ajouter au panier</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Table for cart items -->
+      <div class="cart">
+        <div *ngIf="cartGames.length > 0; else emptyCart">
+          <div class="cart-item" *ngFor="let game of cartGames">
+            <div class="item-info">
+              <p><strong>Game title:</strong> {{ gamesNames[game.game_id] || 'Loading...' }}</p>
+              <p><strong>Cost:</strong> {{ game.price }} €</p>
+              <p><strong>Condition:</strong> {{ game.condition }}</p>
+            </div>
+            <div class="item-thumbnail">
+                <img src="icon.png" alt="icon">
+            </div>
+          </div>
+        </div>
+  
+        <!-- Empty cart message -->
+        <ng-template #emptyCart>
+          <div class="empty-cart">No games in your cart</div>
+        </ng-template>
+      </div>
+  
+      <!-- Total and Pay Section -->
+      <div class="cart-footer">
+        <p><strong>Total:</strong> {{ calculateTotal() }} €</p>
+        <button class="pay-button">PAY</button>
+      </div>
+    </div>
+  
+    <!-- Footer -->
+    <div class="footer">
+      <a href="#" class="invoice-link">Generate an invoice</a>
+    </div>
+  </div>
+  

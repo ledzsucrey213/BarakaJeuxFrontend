@@ -1,0 +1,248 @@
+// Variables pour les couleurs principales
+$primary-color: #0044b2;
+$secondary-color: #00308f;
+$border-color: #0044b2;
+$background-color: #f9f9f9;
+$text-color: #333;
+$hover-bg-color: #f0f0f0;
+$button-text-color: white;
+
+// Style principal pour le conteneur
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: $background-color;
+
+  // Style pour la navigation supérieure
+  .top-nav {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    background-color: $primary-color;
+    padding: 10px 0;
+
+    .nav-button {
+      color: $button-text-color;
+      font-weight: bold;
+      font-size: 14px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // Contenu principal
+  .main-content {
+    width: 80%;
+    margin-top: 20px;
+
+    // Conteneur pour le titre et la barre de recherche
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+
+      h2 {
+        font-size: 24px;
+        color: $primary-color;
+        text-transform: uppercase;
+        margin: 0;
+      }
+
+      .search-bar {
+        width: 40%;
+        position: relative;
+
+        input {
+          padding: 10px;
+          border: 1px solid $primary-color;
+          width: 100%;
+          border-radius: 6px;
+          outline: none;
+
+          &:focus {
+            border-color: $secondary-color;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+          }
+        }
+
+        .search-icon {
+          position: absolute;
+          right: -15px; /* Distance entre l'icône et le bord droit */
+          top: 50%; /* Centre verticalement */
+          transform: translateY(-50%); /* Correction pour centrer parfaitement */
+          width: 30px; /* Taille de l'icône */
+          height: 30px;
+          cursor: pointer; }
+
+        .search-results {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background: white;
+          border: 1px solid $border-color;
+          z-index: 10;
+          max-height: 200px;
+          overflow-y: auto;
+          border-radius: 6px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+          .search-result {
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: 1px solid $secondary-color;
+
+            &:hover {
+              background-color: $hover-bg-color;
+            }
+          }
+
+          .cart-button {
+            background-color: $primary-color;
+            color: $button-text-color;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+
+            &:hover {
+              background-color: $secondary-color;
+              transform: scale(1.05);
+            }
+
+            &:active {
+              background-color: darken($secondary-color, 10%);
+              transform: scale(0.95);
+            }
+
+            &:disabled {
+              background-color: #a9a9a9;
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+    }
+
+    // Panier
+    .cart {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 2px solid $border-color;
+        padding: 15px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        .item-info {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+
+          p {
+            margin: 0;
+            color: $text-color;
+            font-size: 16px;
+
+            strong {
+              color: $primary-color;
+            }
+          }
+        }
+
+        .item-thumbnail {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        
+          img {
+            width: 50px; // Ajustez la taille selon vos besoins
+            height: 50px; // Ajustez la taille selon vos besoins
+            object-fit: cover; // Permet de cadrer l'image sans la déformer
+            border: 1px solid $primary-color; // Bordure autour de l'image
+            border-radius: 4px; // Coins arrondis
+          }
+        }
+        
+      }
+
+      .empty-cart {
+        border: 2px solid $primary-color;
+        padding: 20px;
+        text-align: center;
+        background-color: $background-color;
+        border-radius: 10px;
+        font-size: 16px;
+        color: $text-color;
+      }
+    }
+  }
+
+  // Pied du panier
+  .cart-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+
+    p {
+      font-size: 18px;
+      font-weight: bold;
+      color: $primary-color;
+    }
+
+    .pay-button {
+      background-color: $primary-color;
+      color: $button-text-color;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: $secondary-color;
+      }
+    }
+  }
+
+  // Footer
+  .footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+
+    .invoice-link {
+      color: $primary-color;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
