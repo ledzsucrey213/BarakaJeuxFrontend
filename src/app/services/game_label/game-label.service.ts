@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GameLabel } from '../../models/game_label/game-label';
+import { Game } from '../../models/game/game';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +32,16 @@ export class GameLabelService {
 
   postGameLabels(gameLabels: Omit<GameLabel, '_id'>[]): Observable<GameLabel[]> {
     return this.http.post<GameLabel[]>(`${this.apiUrl}/deposit`, gameLabels);
+  }
+   // Méthode pour récupérer les informations de chaque jeu associé
+   getGamesFromLabels(gameLabels: GameLabel[]): Observable<Game[]> {
+    const gameRequests = gameLabels.map((label) =>
+      this.http.get<Game>(`${this.apiUrl}/${label.game_id}`) // Requête pour chaque game_id
+    );
+
+    return forkJoin(gameRequests).pipe(
+      map((games) => games.map((json) => Game.createFrom(json))) // Mapper chaque JSON en Game
+    );
   }
   
 

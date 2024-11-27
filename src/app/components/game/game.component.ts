@@ -7,12 +7,14 @@ import { Game } from '../../models/game/game';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user/user.service';
 import { User } from '../../models/user/user';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
-  imports : [CommonModule],
+  imports : [CommonModule, FormsModule, RouterModule],
   standalone : true
 })
 export class GameComponent implements OnInit {
