@@ -71,6 +71,8 @@
           <div class="game-label-item" (click)="goToGameComponent(label.game_id)">
             <strong>{{ gamesNames[label.game_id] || 'Chargement du nom...' }}</strong>
             <br />
+            Editor : {{ gameEditors[label.game_id]}}
+            <br />
             Prix : {{ label.price }} €
             <br />
             Condition : {{ label.condition }}

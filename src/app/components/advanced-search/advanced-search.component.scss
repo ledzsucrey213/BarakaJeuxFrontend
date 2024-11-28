@@ -35,21 +35,21 @@
     .form-section,
     .filters {
       display: flex;
+      flex-wrap: wrap;
       gap: 20px;
       margin-bottom: 20px;
-      flex-wrap: wrap;
-
+    
       .filter {
         display: flex;
         flex-direction: column;
-        width: 45%; // Garde la largeur des filtres égale
-
+        width: calc(100% / 2 - 20px); /* Adjust to align fields evenly */
+    
         label {
           margin-bottom: 5px;
           font-weight: bold;
           color: black;
         }
-
+    
         select,
         input,
         textarea {
@@ -57,20 +57,37 @@
           border: 1px solid #ccc;
           border-radius: 5px;
         }
-
+    
         textarea {
-          height: 100px; 
+          height: 100px;
         }
       }
-
+    
       .price-range {
         display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        width: 45%;
-        margin-left: auto; 
+        flex-direction: column; /* Align vertically for consistency */
+        width: calc(100% / 2 - 20px); /* Same width as other filters */
+    
+        label {
+          margin-bottom: 5px;
+          font-weight: bold;
+          color: black;
+        }
+    
+        div {
+          display: flex;
+          gap: 10px;
+    
+          input {
+            flex: 1; /* Allow inputs to expand evenly */
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+          }
+        }
       }
     }
+    
 
     .search,
     .editor-search,
