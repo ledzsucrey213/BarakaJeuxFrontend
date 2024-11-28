@@ -9,6 +9,7 @@ import { GameComponent } from './components/game/game.component';
 import { SaleComponent } from './components/sale/sale.component';
 import { StockComponent } from './components/stock/stock.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { AdvancedSearchComponent } from './components/advanced-search/advanced-search.component';
 
 export const routes: Route[] = [
   {path: '', component: HomeComponent},
@@ -20,4 +21,5 @@ export const routes: Route[] = [
   {path : 'game/:id', component : GameComponent},
   {path : 'stock/:id', component : StockComponent},
   {path : 'admin', component : AdminComponent},
+  {path : 'advancedsearch', component : AdvancedSearchComponent}
 ];

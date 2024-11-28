@@ -1,0 +1,92 @@
+<div class="advanced-search">
+  <!-- Top Navigation -->
+  <div class="top-nav">
+    <button class="nav-button">ADVANCED SEARCH</button>
+    <button class="nav-button">{{ eventName }}</button>
+    <button class="nav-button">ENDS IN {{ remainingTime }}</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Filters Section -->
+    <h3>Add filters:</h3>
+    <div class="filters">
+      <!-- Search by Name -->
+      <div class="filter">
+        <label for="filter-by-name">Filter by name</label>
+        <input type="text" (input)="filterByName($event)" placeholder="Rechercher par nom..." />
+      </div>
+
+      <!-- Search by Editor -->
+      <div class="filter">
+        <label for="filter-by-editor">Filter by editor</label>
+        <input type="text" (input)="filterByEditor($event)" placeholder="Rechercher par éditeur..." />
+      </div>
+
+      <!-- Sort by Selector -->
+      <div class="filter">
+        <label for="sort-by">Sort by</label>
+        <select (change)="sortBy($event)">
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+        </select>
+      </div>
+
+      <!-- Price Range Filters -->
+      <div class="filter price-range">
+        <label for="price-range">Fix your prices</label>
+        <div>
+          <input type="number" [(ngModel)]="minPrice" (ngModelChange)="filterByPrice()" placeholder="Min Price">
+          <input type="number" [(ngModel)]="maxPrice" (ngModelChange)="filterByPrice()" placeholder="Max Price">
+        </div>
+      </div>
+
+      <!-- Condition Filter -->
+      <div class="filter">
+        <label for="condition">Condition</label>
+        <select (change)="filterByCondition($event)">
+          <option value="">All</option>
+          <option value="new">New</option>
+          <option value="very good">Very Good</option>
+          <option value="good">Good</option>
+          <option value="poor">Poor</option>
+        </select>
+      </div>
+
+      <!-- Describe Your Game -->
+      <div class="filter">
+        <label for="game-description">Describe your game</label>
+        <textarea (input)="filterByDescription($event)" placeholder="Describe your game..."></textarea>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results" *ngIf="gamelabelsfiltered.length > 0; else noGameLabels">
+      <h3>Liste des Game Labels</h3>
+      <ul>
+        <li *ngFor="let label of gamelabelsfiltered">
+          <!-- Game Label Click Event -->
+          <div class="game-label-item" (click)="goToGameComponent(label.game_id)">
+            <strong>{{ gamesNames[label.game_id] || 'Chargement du nom...' }}</strong>
+            <br />
+            Prix : {{ label.price }} €
+            <br />
+            Condition : {{ label.condition }}
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- No Results Template -->
+    <ng-template #noGameLabels>
+      <p>Aucun game label trouvé.</p>
+    </ng-template>
+
+    <!-- Reset Filters Button -->
+    <div class="reset-filters">
+      <button (click)="resetFilters()">Réinitialiser les filtres</button>
+    </div>
+  </div>
+</div>
