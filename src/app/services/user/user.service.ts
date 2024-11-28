@@ -43,4 +43,9 @@ export class UserService {
     return this.http.get<User>(`${this.apiUrl}/${id}`).pipe(
       map((json) => User.createFrom(json)) // Mapper l'objet JSON au modèle Game
     ); }
+
+  updateUser(userId: string, updatedUser: Partial<User>): Observable<User> {
+    const url = `${this.apiUrl}/${userId}`; // URL de la ressource à mettre à jour
+    return this.http.put<User>(url, updatedUser);
+  }
 }

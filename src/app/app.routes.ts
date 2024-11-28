@@ -8,6 +8,7 @@ import { NewSellerComponent } from './components/new-seller/new-seller.component
 import { GameComponent } from './components/game/game.component';
 import { SaleComponent } from './components/sale/sale.component';
 import { StockComponent } from './components/stock/stock.component';
+import { AdminComponent } from './components/admin/admin.component';
 import { AdvancedSearchComponent } from './components/advanced-search/advanced-search.component';
 import { ReportComponent } from './components/financial-report/financial-report.component';
 
@@ -22,4 +23,6 @@ export const routes: Route[] = [
   {path : 'stock/:id', component : StockComponent},
   {path : 'advancedsearch', component : AdvancedSearchComponent},
   {path : 'financialreport/:id', component : ReportComponent},
+  {path : 'admin', component : AdminComponent},
+
 ];

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule, RouterOutlet, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,10 @@ import { RouterModule, RouterOutlet, RouterLink } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
+  constructor(private router : Router) {}
+
+  goToAdminComponent() {
+    this.router.navigate(['/admin']); // Redirige vers /search-seller
+  } 
 }

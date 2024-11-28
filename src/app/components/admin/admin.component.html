@@ -1,0 +1,107 @@
+<div class="admin-container">
+    <div class="top-nav">
+        <button class="nav-button">DEPOSIT</button>
+        <button class="nav-button">{{ eventName }}</button>
+        <button class="nav-button">ENDS IN {{ remainingTime }}</button>
+      </div>
+    <!-- SECTION EVENTS -->
+    <div class="section">
+      <!-- SECTION EVENTS -->
+    <div class="section">
+      <div class="event-form">        
+      <button (click)="toggleAddEventForm()">
+        {{ showAddEventForm ? 'Cancel' : 'Add Event' }}
+      </button>
+      </div>
+      <!-- Formulaire d'ajout d'événement -->
+      <div *ngIf="showAddEventForm" class="add-event-form">
+        <label>
+          Name:
+          <input type="text" [(ngModel)]="newEvent.name" />
+        </label>
+        <label>
+          Start Date:
+          <input
+            type="datetime-local"
+            [(ngModel)]="newEvent.start"
+            [min]="minStartDate" />
+        </label>
+        <label>
+          End Date:
+          <input
+            type="datetime-local"
+            [(ngModel)]="newEvent.end"
+            [min]="newEvent.start ? newEvent.start.toISOString().slice(0,16) : minStartDate" />
+        </label>
+        <label>
+          Commission Rate (%):
+          <input type="number" [(ngModel)]="newEvent.commission" min="0" />
+        </label>
+        <button (click)="addEvent()">Save Event</button>
+      </div>
+      <h2>Events :</h2>
+      <div *ngFor="let event of events" class="event-details">
+        <p><strong>Name:</strong> {{ event.name }}</p>
+        <p><strong>Start:</strong> {{ event.start }}</p>
+        <p><strong>End:</strong> {{ event.end }}</p>
+      </div>
+    </div>
+  
+    <!-- SECTION USERS -->
+    <div class="section">
+      <h2>Users :</h2>
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Adresse</th>
+            <th>Rôle</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.firstname }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.address }}</td>
+            <td>{{ user.role }}</td>
+            <td><button (click)="editUser(user)">Edit</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="selectedUserId" class="edit-user-form">
+        <h3>Modifier l'utilisateur</h3>
+        <label>
+          Prénom:
+          <input type="text" [(ngModel)]="editUserForm.firstname" />
+        </label>
+        <label>
+          Nom:
+          <input type="text" [(ngModel)]="editUserForm.name" />
+        </label>
+        <label>
+          Email:
+          <input type="email" [(ngModel)]="editUserForm.email" />
+        </label>
+        <label>
+          Adresse:
+          <input type="text" [(ngModel)]="editUserForm.address" />
+        </label>
+        <label>
+          Rôle:
+          <select [(ngModel)]="editUserForm.role">
+            <option value="seller">Seller</option>
+            <option value="buyer">Buyer</option>
+            <option value="admin">Admin</option>
+            <option value="manager">Manager</option>
+          </select>
+        </label>
+        <button (click)="updateUser()">Sauvegarder</button>
+        <button (click)="resetEditForm()">Annuler</button>
+      </div>      
+    </div>
+  </div>
+  
