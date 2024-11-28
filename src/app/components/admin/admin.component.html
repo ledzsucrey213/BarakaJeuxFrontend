@@ -1,0 +1,65 @@
+<div class="admin-container">
+    <div class="top-nav">
+        <button class="nav-button">DEPOSIT</button>
+        <button class="nav-button">{{ eventName }}</button>
+        <button class="nav-button">ENDS IN {{ remainingTime }}</button>
+      </div>
+    <!-- SECTION EVENTS -->
+    <div class="section">
+      <h2>Events :</h2>
+      <div class="event-form">
+        <label>
+          Name :
+          <input type="text" placeholder="Event Name" />
+        </label>
+        <label>
+          Start :
+          <input type="date" />
+        </label>
+        <label>
+          End :
+          <input type="date" />
+        </label>
+        <label>
+          Description :
+          <textarea rows="3" placeholder="Description"></textarea>
+        </label>
+        <button (click)="addEvent()">Add Event</button>
+      </div>
+      <div *ngFor="let event of events" class="event-details">
+        <p><strong>Name:</strong> {{ event.name }}</p>
+        <p><strong>Start:</strong> {{ event.start }}</p>
+        <p><strong>End:</strong> {{ event.end }}</p>
+      </div>
+    </div>
+  
+    <!-- SECTION USERS -->
+    <div class="section">
+      <h2>Users :</h2>
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Adresse</th>
+            <th>Password</th>
+            <th>Rôle</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.firstname }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.address }}</td>
+            <td>{{ user.password }}</td>
+            <td>{{ user.role }}</td>
+            <td><button (click)="editUser(user)">Edit</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
