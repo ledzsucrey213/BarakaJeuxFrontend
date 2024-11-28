@@ -1,0 +1,142 @@
+.financial-report {
+    font-family: Arial, sans-serif;
+    color: #0044b2;
+    max-width: 850px;  /* Réduisez cette valeur pour réduire la largeur */
+    margin: 0 auto;
+    border: 1px solid #ccc;
+  
+    .top-nav {
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
+        background-color: #0044b2;
+        padding: 10px 0;
+    
+        .nav-button {
+          color: white;
+          font-weight: bold;
+          font-size: 14px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          text-transform: uppercase;
+    
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+  
+    .content {
+      display: flex;
+      flex-direction: column;
+      padding: 20px; /* Consistent spacing */
+  
+      .row {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap; /* Ensure responsive behavior */
+        padding: 20px; /* Uniform gap for all inputs */
+  
+        .input-group {
+          display: flex;
+          flex-direction: column;
+          width: calc(100% / 2 - 20px); /* Same width as filters in advanced-search */
+  
+          label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: black;
+          }
+  
+          input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+          }
+        }
+      }
+  
+      .report-section {
+        label {
+          font-weight: bold;
+          display: block;
+          margin-bottom: 10px;
+          color: black;
+        }
+  
+        .report-details {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr); /* Align with filters in advanced-search */
+          gap: 20px;
+  
+          .report-item {
+            display: flex;
+            flex-direction: column;
+  
+            label {
+              font-weight: bold;
+              margin-bottom: 5px;
+              color: black;
+            }
+  
+            input {
+              padding: 10px;
+              border: 1px solid #ccc;
+              border-radius: 5px;
+              background-color: #f9f9f9;
+            }
+          }
+        }
+      }
+  
+      .action-buttons {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap; /* Ensure buttons stack on smaller screens */
+        gap: 20px; /* Consistent spacing for actions */
+  
+        button {
+          padding: 10px 20px;
+          font-size: 14px;
+          border: 1px solid #0044b2;
+          border-radius: 5px;
+          font-weight: bold;
+          cursor: pointer;
+          color: white;
+          background-color: #0044b2;
+  
+          &:hover {
+            background-color: #003399;
+          }
+  
+          &.primary {
+            background-color: #ff6600; /* Add differentiation for primary action */
+            border-color: #ff6600;
+  
+            &:hover {
+              background-color: #e65c00;
+            }
+          }
+        }
+      }
+    }
+  
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+  
+      span {
+        cursor: pointer;
+  
+        &:hover {
+          text-decoration: underline;
+          color: #0044b2;
+        }
+      }
+    }
+  }
+  
