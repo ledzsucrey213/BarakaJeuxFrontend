@@ -1,142 +1,159 @@
-.financial-report {
-    font-family: Arial, sans-serif;
-    color: #0044b2;
-    max-width: 850px;  /* Réduisez cette valeur pour réduire la largeur */
-    margin: 0 auto;
-    border: 1px solid #ccc;
-  
-    .top-nav {
+.financial-report { 
+  font-family: Arial, sans-serif;
+  color: #0044b2;
+  max-width: 850px; /* Keep width consistent */
+  margin: 0 auto;
+  border: 1px solid #ccc;
+
+  .top-nav {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    background-color: #0044b2;
+    padding: 10px 0;
+
+    .nav-button {
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: 20px;
+
+      .input-group {
         display: flex;
-        width: 100%;
-        justify-content: space-around;
-        background-color: #0044b2;
-        padding: 10px 0;
-    
-        .nav-button {
-          color: white;
+        flex-direction: column;
+        width: calc(100% / 2 - 20px);
+
+        label {
           font-weight: bold;
-          font-size: 14px;
-          background: none;
-          border: none;
-          cursor: pointer;
-          text-transform: uppercase;
-    
-          &:hover {
-            text-decoration: underline;
-          }
+          margin-bottom: 5px;
+          color: black;
+        }
+
+        input,
+        select {
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
         }
       }
-  
-    .content {
-      display: flex;
-      flex-direction: column;
-      padding: 20px; /* Consistent spacing */
-  
-      .row {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap; /* Ensure responsive behavior */
-        padding: 20px; /* Uniform gap for all inputs */
-  
-        .input-group {
+    }
+
+    .report-section {
+      margin-bottom: 20px; /* Add space below the report section */
+      
+      label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 10px;
+        color: black;
+      }
+
+      .report-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+
+        .report-item {
           display: flex;
           flex-direction: column;
-          width: calc(100% / 2 - 20px); /* Same width as filters in advanced-search */
-  
+
           label {
             font-weight: bold;
             margin-bottom: 5px;
             color: black;
           }
-  
-          input {
+
+          span {
             padding: 10px;
+            background-color: #f9f9f9;
             border: 1px solid #ccc;
             border-radius: 5px;
           }
-        }
-      }
-  
-      .report-section {
-        label {
-          font-weight: bold;
-          display: block;
-          margin-bottom: 10px;
-          color: black;
-        }
-  
-        .report-details {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr); /* Align with filters in advanced-search */
-          gap: 20px;
-  
-          .report-item {
-            display: flex;
-            flex-direction: column;
-  
-            label {
-              font-weight: bold;
-              margin-bottom: 5px;
-              color: black;
-            }
-  
-            input {
-              padding: 10px;
-              border: 1px solid #ccc;
-              border-radius: 5px;
-              background-color: #f9f9f9;
-            }
-          }
-        }
-      }
-  
-      .action-buttons {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap; /* Ensure buttons stack on smaller screens */
-        gap: 20px; /* Consistent spacing for actions */
-  
-        button {
-          padding: 10px 20px;
-          font-size: 14px;
-          border: 1px solid #0044b2;
-          border-radius: 5px;
-          font-weight: bold;
-          cursor: pointer;
-          color: white;
-          background-color: #0044b2;
-  
-          &:hover {
-            background-color: #003399;
-          }
-  
-          &.primary {
-            background-color: #ff6600; /* Add differentiation for primary action */
-            border-color: #ff6600;
-  
+          .get-back-games {
+            background: none;
+            border: none;
+            color: #007bff; /* Blue color */
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+            margin-left: auto;
+            font: inherit;
+          
             &:hover {
-              background-color: #e65c00;
+              text-decoration: none;
             }
           }
         }
       }
     }
-  
-    .footer {
+
+    .action-buttons {
+      margin-top: 20px; /* Ensure some space above the buttons */
       display: flex;
       justify-content: space-between;
-      margin-top: 20px;
-      font-size: 14px;
-      color: #666;
-  
-      span {
+      flex-wrap: wrap;
+      gap: 20px;
+
+      button {
+        padding: 10px 20px;
+        font-size: 14px;
+        border: 1px solid #0044b2;
+        border-radius: 5px;
+        font-weight: bold;
         cursor: pointer;
-  
+        color: white;
+        background-color: #0044b2;
+
         &:hover {
-          text-decoration: underline;
-          color: #0044b2;
+          background-color: #003399;
+        }
+
+        &.primary {
+          background-color: #ff6600;
+          border-color: #ff6600;
+
+          &:hover {
+            background-color: #e65c00;
+          }
         }
       }
     }
   }
-  
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+
+    span {
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+        color: #0044b2;
+      }
+    }
+  }
+}
