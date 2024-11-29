@@ -179,10 +179,34 @@ export class SaleComponent {
     this.cartGames.push(game);
   }
   
-  pay() : void {
-    
+  pay(): void {
+    if (!Array.isArray(this.cartGames) || this.cartGames.length === 0) {
+      console.warn('Le panier est vide ou invalide.');
+      return;
+    }
+  
+    // Organiser les jeux par sellerId
+    const gamesBySeller: { [sellerId: string]: GameLabel[] } = this.cartGames.reduce((acc, game) => {
+      if (!game.seller_id) {
+        console.warn('Un jeu sans sellerId a été trouvé et sera ignoré :', game);
+        return acc;
+      }
+  
+      if (!acc[game.seller_id]) {
+        acc[game.seller_id] = [];
+      }
+  
+      acc[game.seller_id].push(game);
+      return acc;
+    }, {} as { [sellerId: string]: GameLabel[] });
+  
+    console.log('Organisation des jeux par sellerId :', gamesBySeller);
+  
+    // Appeler sellGame pour chaque groupe de jeux d'un même sellerId
+    Object.entries(gamesBySeller).forEach(([sellerId, soldGames]) => {
+      this.stockService.sellGame(sellerId, soldGames);
+    });
   }
-
 
 
 
