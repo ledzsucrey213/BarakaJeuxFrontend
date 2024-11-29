@@ -237,7 +237,6 @@ export class DepositComponent implements OnInit, OnDestroy {
   }
 
 
-  
   endDeposit(): void {
     console.log('Début du dépôt');
   
@@ -246,18 +245,34 @@ export class DepositComponent implements OnInit, OnDestroy {
       return;
     }
   
-    // Étape 1 : Publier les GameLabels via gameLabelService
+    // Vérification que addedGamesLabels est bien un tableau avant l'appel
+    if (!Array.isArray(this.addedGamesLabels)) {
+      console.error('addedGamesLabels n\'est pas un tableau valide.');
+      return;
+    }
+  
+    // Publier tous les GameLabels via gameLabelService
     this.gameLabelService.postGameLabels(this.addedGamesLabels).subscribe({
       next: (createdGameLabels: GameLabel[]) => {
-        console.log('Jeux déposés avec succès :', createdGameLabels);
+        console.log('Tous les jeux déposés avec succès :', createdGameLabels);
+  
+        // Appeler addNewGameLabelToStock après la publication complète
         this.stockService.addNewGameLabelToStock(this.sellerId);
-        this.addedGamesLabels = [];       
+  
+        // Réinitialiser la liste après le succès
+        this.addedGamesLabels = [];
       },
       error: (error) => {
         console.error('Erreur lors du dépôt des jeux :', error);
       },
     });
   }
+  
+  
+  
+
+  
+  
   
 
   

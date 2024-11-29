@@ -11,6 +11,7 @@ import { Game } from '../../models/game/game';
 import { Subject } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { HostListener } from '@angular/core';
+import { stockService } from '../../services/stock/stock.service';
 
 @Component({
   selector: 'app-sale',
@@ -40,7 +41,8 @@ export class SaleComponent {
     private gameLabelService: GameLabelService,
     private gameService: GameService,
     private cdr: ChangeDetectorRef,  // Injecter ChangeDetectorRef
-    private eventService: EventService
+    private eventService: EventService,
+    private stockService : stockService
   ) {}
 
 
@@ -177,6 +179,9 @@ export class SaleComponent {
     this.cartGames.push(game);
   }
   
+  pay() : void {
+    
+  }
 
 
 
