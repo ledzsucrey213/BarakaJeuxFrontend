@@ -250,49 +250,8 @@ export class DepositComponent implements OnInit, OnDestroy {
     this.gameLabelService.postGameLabels(this.addedGamesLabels).subscribe({
       next: (createdGameLabels: GameLabel[]) => {
         console.log('Jeux déposés avec succès :', createdGameLabels);
-  
-        // Étape 2 : Récupérer tous les GameLabels associés au vendeur
-        this.gameLabelService.getGameLabelsBySellerId(this.sellerId).subscribe({
-          next: (sellerGameLabels: GameLabel[]) => {
-            console.log('GameLabels associés au vendeur récupérés :', sellerGameLabels);
-  
-            // Étape 3 : Récupérer le stock actuel du vendeur
-            this.stockService.getStocksBySellerId(this.sellerId).subscribe({
-              next: (stock: Stock) => {
-                if (!stock || !stock._id) {
-                  console.error('Stock invalide ou non trouvé.');
-                  return;
-                }
-  
-                console.log('Stock actuel récupéré :', stock);
-  
-                // Étape 4 : Mettre à jour le tableau games_id avec les IDs des GameLabels
-                const updatedStock: Partial<Stock> = {
-                  games_id: sellerGameLabels.map(label => label._id), // Utiliser les IDs
-                };
-  
-                console.log('Mise à jour du stock avec :', updatedStock);
-  
-                // Mettre à jour le stock via StockService
-                this.stockService.updateStock(stock._id, updatedStock).subscribe({
-                  next: (updatedStock: Stock) => {
-                    console.log('Stock mis à jour avec succès :', updatedStock);
-                    this.addedGamesLabels = []; // Réinitialiser la liste après la mise à jour
-                  },
-                  error: (error) => {
-                    console.error('Erreur lors de la mise à jour du stock :', error);
-                  },
-                });
-              },
-              error: (error) => {
-                console.error('Erreur lors de la récupération du stock :', error);
-              },
-            });
-          },
-          error: (error) => {
-            console.error('Erreur lors de la récupération des GameLabels du vendeur :', error);
-          },
-        });
+        this.stockService.addNewGameLabelToStock(this.sellerId);
+        this.addedGamesLabels = [];       
       },
       error: (error) => {
         console.error('Erreur lors du dépôt des jeux :', error);
