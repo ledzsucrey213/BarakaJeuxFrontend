@@ -9,6 +9,8 @@ import { UserService } from '../../services/user/user.service';
 import { ReportService } from '../../services/report/report.service';
 import { stockService } from '../../services/stock/stock.service';
 import { Router } from '@angular/router';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-financial-report',
@@ -151,16 +153,25 @@ export class FinancialReportComponent implements OnInit {
     console.log('Navigating to stocks...');
   }
 
-  exportToPDF(): void {
-    console.log('Exporting to PDF...');
-  }
-
   takeMoney(): void {
     console.log('Taking your money...');
   }
   getBackGames(sellerId : string): void {
     // Implement the logic for "get back my games" action
     this.router.navigate([`/stock/${sellerId}`]);
+  }
+  exportToPDF(): void {
+    const data = document.getElementById('report-section'); // Ensure the element ID matches
+    if (data) {
+      html2canvas(data).then(canvas => {
+        const imgWidth = 208;
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        const contentDataURL = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
+        pdf.save('financial-report.pdf');
+      });
+    }
   }
   
 }
