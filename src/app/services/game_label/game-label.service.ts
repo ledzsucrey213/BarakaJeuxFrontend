@@ -43,6 +43,11 @@ export class GameLabelService {
       map((games) => games.map((json) => Game.createFrom(json))) // Mapper chaque JSON en Game
     );
   }
+
+  updateGameLabel(gameId: string, updatedStock: Partial<GameLabel>): Observable<GameLabel> {
+    const url = `${this.apiUrl}/${gameId}`; // URL de la ressource à mettre à jour
+    return this.http.put<GameLabel>(url, updatedStock);
+  }
   
 
 }
