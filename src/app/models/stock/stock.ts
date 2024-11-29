@@ -3,9 +3,9 @@ import { User } from "../user/user";
 
 export class Stock {
   _id: string;
-  games_id: string[]; // List of game IDs
+  games_id: GameLabel[]; // List of game IDs
   seller_id: User; // Seller object
-  games_sold: string[]; // List of sold game IDs
+  games_sold: GameLabel[]; // List of sold game IDs
 
   constructor(data: Partial<Stock>) {
     this._id = data._id || '';

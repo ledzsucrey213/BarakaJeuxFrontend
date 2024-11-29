@@ -152,9 +152,10 @@ export class StockComponent implements OnInit, OnDestroy {
 
         console.log('games_id est un tableau valide, traitement en cours...');
         this.gamesInStock = [];
+        console.log('1st games_id:', stock.games_id[0]);
 
         stock.games_id.forEach((gameId) => {
-          this.gameLabelService.getGameLabelById(gameId).subscribe({
+          this.gameLabelService.getGameLabelById(gameId._id).subscribe({
             next: (gameLabel: GameLabel) => {
               this.gamesInStock.push(gameLabel);
               this.fetchGameName(gameLabel.game_id);
@@ -192,7 +193,7 @@ export class StockComponent implements OnInit, OnDestroy {
         this.gamesSold = [];
 
         stock.games_sold.forEach((gameId) => {
-          this.gameLabelService.getGameLabelById(gameId).subscribe({
+          this.gameLabelService.getGameLabelById(gameId._id).subscribe({
             next: (gameLabel: GameLabel) => {
               this.gamesSold.push(gameLabel);
               this.fetchGameName(gameLabel.game_id);
