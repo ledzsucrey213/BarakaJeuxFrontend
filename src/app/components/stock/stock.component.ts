@@ -143,7 +143,7 @@ export class StockComponent implements OnInit, OnDestroy{
 
     // Méthode pour récupérer les GameLabels associés au jeu
     fetchGamesInStock(sellerId: string): void {
-      this.stockService.getStocksByClientId(sellerId).subscribe({
+      this.stockService.getStocksBySellerId(sellerId).subscribe({
         next: (stock: Stock) => {
           console.log('Stock complet reçu :', JSON.stringify(stock, null, 2));
           console.log("Vérification de stock.games_id :", JSON.stringify(stock.games_id, null, 2));  // Ajoute cette ligne pour voir ce que contient réellement stock.games_id
@@ -213,7 +213,7 @@ export class StockComponent implements OnInit, OnDestroy{
     
     // Méthode pour récupérer les GameLabels associés au jeu
     fetchGamesSold(sellerId: string): void {
-      this.stockService.getStocksByClientId(sellerId).subscribe({
+      this.stockService.getStocksBySellerId(sellerId).subscribe({
         next: (stock: Stock) => {
           console.log('Stock complet reçu :', JSON.stringify(stock, null, 2));
           console.log("Vérification de stock.games_sold :", JSON.stringify(stock.games_sold, null, 2));  // Ajoute cette ligne pour voir ce que contient réellement stock.games_id
