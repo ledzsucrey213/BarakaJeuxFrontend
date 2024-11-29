@@ -259,12 +259,19 @@ export class DepositComponent implements OnInit, OnDestroy {
             // Étape 3 : Récupérer le stock actuel du vendeur
             this.stockService.getStocksBySellerId(this.sellerId).subscribe({
               next: (stock: Stock) => {
+                if (!stock || !stock._id) {
+                  console.error('Stock invalide ou non trouvé.');
+                  return;
+                }
+  
                 console.log('Stock actuel récupéré :', stock);
   
-                // Étape 4 : Mettre à jour le tableau games_id avec les GameLabels complets
+                // Étape 4 : Mettre à jour le tableau games_id avec les IDs des GameLabels
                 const updatedStock: Partial<Stock> = {
-                  games_id: sellerGameLabels, // Ajouter les objets GameLabel complets
+                  games_id: sellerGameLabels.map(label => label._id), // Utiliser les IDs
                 };
+  
+                console.log('Mise à jour du stock avec :', updatedStock);
   
                 // Mettre à jour le stock via StockService
                 this.stockService.updateStock(stock._id, updatedStock).subscribe({
@@ -292,6 +299,10 @@ export class DepositComponent implements OnInit, OnDestroy {
       },
     });
   }
+  
+
+  
+  
   
   
 
