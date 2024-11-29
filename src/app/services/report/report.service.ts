@@ -16,4 +16,8 @@ export class ReportService {
     return this.http.get(`${this.apiUrl}`); // Requête pour récupérer tous les reports
   }
 
+  getReportByEventId(eventId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}?event_id=${eventId}`);
+  }
+
 }

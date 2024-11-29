@@ -1,0 +1,58 @@
+<div class="financial-report">
+
+  <div class="top-nav">
+    <button class="nav-button">FINANCIAL REPORTS</button>
+    <button class="nav-button">{{ eventName }}</button>
+    <button class="nav-button">ENDS IN {{ remainingTime }}</button>
+  </div>
+
+  <!-- Content Section -->
+  <div class="content">
+    <div class="row">
+      <div class="input-group">
+        <label for="event">Event selected:</label>
+        <select id="event" [(ngModel)]="eventSelected" (change)="onEventChange()">
+          <option *ngFor="let event of events" [value]="event._id">{{ event.name }}</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="user">User selected:</label>
+        <span id="user">{{ sellerId.firstname }} {{ sellerId.name }}</span>
+      </div>
+    </div>
+
+    <div class="report-section" *ngIf="financialReport">
+      <label>Report:</label>
+      <div class="report-details">
+        <div class="report-item">
+          <label>Total Earned:</label>
+          <span>{{ financialReport.total_earned || 0 }} €</span>
+        </div>
+        <div class="report-item">
+          <label>Total Due:</label>
+          <span>{{ financialReport.total_due || 0 }} €</span>
+        </div>
+        <div class="report-item">
+          <label>Report Date:</label>
+          <span>{{ financialReport.report_date || 'Not generated yet' }}</span>
+        </div>
+        <div class="report-item">
+          <label>Games in stock: (current event only)</label>
+          <span>{{ games_in_stock || 0 }}</span>
+          <button class="get-back-games" (click)="getBackGames(sellerId._id)">Reclaim my games</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button (click)="exportToPDF()">EXPORT TO PDF</button>
+      <button class="primary" (click)="takeMoney()">TAKE YOUR MONEY</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Admin</span>
+    <span>Manager</span>
+  </div>
+</div>

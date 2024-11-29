@@ -10,6 +10,7 @@ import { SaleComponent } from './components/sale/sale.component';
 import { StockComponent } from './components/stock/stock.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { AdvancedSearchComponent } from './components/advanced-search/advanced-search.component';
+import { FinancialReportComponent } from './components/financial-report/financial-report.component';
 
 export const routes: Route[] = [
   {path: '', component: HomeComponent},
@@ -20,6 +21,8 @@ export const routes: Route[] = [
   {path : 'new-seller', component : NewSellerComponent},
   {path : 'game/:id', component : GameComponent},
   {path : 'stock/:id', component : StockComponent},
+  {path : 'advancedsearch', component : AdvancedSearchComponent},
+  {path : 'financialreport/:id', component : FinancialReportComponent},
   {path : 'admin', component : AdminComponent},
-  {path : 'advancedsearch', component : AdvancedSearchComponent}
+
 ];
