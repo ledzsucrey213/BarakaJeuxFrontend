@@ -9,7 +9,6 @@ import { UserService } from '../../services/user/user.service';
 import { ReportService } from '../../services/report/report.service';
 import { stockService } from '../../services/stock/stock.service';
 import { Router } from '@angular/router';
-import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 @Component({
@@ -167,9 +166,9 @@ export class FinancialReportComponent implements OnInit {
         const imgWidth = 208;
         const imgHeight = canvas.height * imgWidth / canvas.width;
         const contentDataURL = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
-        pdf.save('financial-report.pdf');
+        // const pdf = new jsPDF('p', 'mm', 'a4');
+        // pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
+        // pdf.save('financial-report.pdf');
       });
     }
   }
