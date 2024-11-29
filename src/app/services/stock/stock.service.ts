@@ -27,9 +27,16 @@ export class stockService {
   }
 
   // Pour récupérer un stock par sellerId
-  getStocksByClientId(sellerId: string): Observable<Stock> {
+  getStocksBySellerId(sellerId: string): Observable<Stock> {
     return this.http.get<any>(`${this.apiUrl}/seller/${sellerId}`).pipe(
       map((data) => Stock.createFrom(data))
     );
   }
+
+  updateStock(stockId: string, updatedStock: Partial<Stock>): Observable<Stock> {
+    const url = `${this.apiUrl}/${stockId}`; // URL de la ressource à mettre à jour
+    return this.http.put<Stock>(url, updatedStock);
+  }
+
+
 }

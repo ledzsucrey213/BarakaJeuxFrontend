@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports : [CommonModule]
 })
-export class StockComponent implements OnInit, OnDestroy{
+export class StockComponent implements OnInit, OnDestroy {
   gamesSold: GameLabel[] = [];
   gamesInStock: GameLabel[] = [];
   sellerId: User = new User({
@@ -46,9 +46,8 @@ export class StockComponent implements OnInit, OnDestroy{
     }),
     games_sold: [],
   });
-  
+
   gamesNames: { [key: string]: string } = {};
-  
 
   constructor(
     private route: ActivatedRoute,
@@ -58,9 +57,10 @@ export class StockComponent implements OnInit, OnDestroy{
     private eventService: EventService,
     private stockService: stockService
   ) {}
+
   ngOnInit(): void {
-     // Récupérer l'ID du jeu depuis l'URL
-     this.route.paramMap.subscribe((params) => {
+    // Récupérer l'ID du vendeur depuis l'URL
+    this.route.paramMap.subscribe((params) => {
       this.sellerId._id = params.get('id') || '';
       console.log(this.sellerId);
       this.fetchEventDetails();
@@ -68,6 +68,7 @@ export class StockComponent implements OnInit, OnDestroy{
       this.fetchGamesSold(this.sellerId._id);
     });
   }
+
   ngOnDestroy(): void {
     // Nettoyer le timer lorsque le composant est détruit
     if (this.timer) {
@@ -75,8 +76,7 @@ export class StockComponent implements OnInit, OnDestroy{
     }
   }
 
-   // Méthode pour récupérer les détails de l'évent actuel
-   fetchEventDetails(): void {
+  fetchEventDetails(): void {
     this.eventService.getEventActive().subscribe({
       next: (session: Event) => {
         this.eventName = session.name;  // Stocker le nom de la session
@@ -84,7 +84,6 @@ export class StockComponent implements OnInit, OnDestroy{
         console.log(`Fetching game for event_id ${session._id}`);
         this.calculateRemainingTime(new Date(session.end)); // Calcul initial
 
-        // Démarrer le timer uniquement sur le client et pas côté serveur
         if (typeof window !== 'undefined') {
           this.startTimer(new Date(session.end)); 
         }
@@ -95,7 +94,6 @@ export class StockComponent implements OnInit, OnDestroy{
     });
   }
 
-  // Méthode pour récupérer le nom des jeux déposés par les vendeurs
   fetchGameName(gameId: string): void {
     this.gameService.getGameById(gameId).subscribe({
       next: (game: Game) => {
@@ -107,20 +105,19 @@ export class StockComponent implements OnInit, OnDestroy{
       },
     });
   }
-  
 
-   // Méthode pour calculer le temps restant
-   calculateRemainingTime(endDate: Date): void {
+  calculateRemainingTime(endDate: Date): void {
     const now = new Date();
     const difference = endDate.getTime() - now.getTime();
 
     if (difference <= 0) {
-      this.remainingTime = 'Session terminée'; // Si la session est terminée
+      this.remainingTime = 'Session terminée';
       if (this.timer) {
-        clearInterval(this.timer); // Arrêter le timer
+        clearInterval(this.timer);
       }
       return;
     }
+
     const days = Math.floor(difference / (1000 * 60 * 60 * 24));
     const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
@@ -128,144 +125,89 @@ export class StockComponent implements OnInit, OnDestroy{
     this.remainingTime = `${days} jours, ${hours} heures, ${minutes} minutes`;
   }
 
-    // Méthode pour démarrer le timer
-    startTimer(endDate: Date): void {
-      if (this.timer) {
-        clearInterval(this.timer); // Assurez-vous que le timer précédent est nettoyé
-      }
-  
-      // Mettre à jour chaque minute (pas nécessaire côté SSR)
-      this.timer = setInterval(() => {
-        this.calculateRemainingTime(endDate);
-      }, 60000); // Toutes les 60 secondes
+  startTimer(endDate: Date): void {
+    if (this.timer) {
+      clearInterval(this.timer); 
     }
 
+    this.timer = setInterval(() => {
+      this.calculateRemainingTime(endDate);
+    }, 60000); 
+  }
 
-    // Méthode pour récupérer les GameLabels associés au jeu
-    fetchGamesInStock(sellerId: string): void {
-      this.stockService.getStocksByClientId(sellerId).subscribe({
-        next: (stock: Stock) => {
-          console.log('Stock complet reçu :', JSON.stringify(stock, null, 2));
-          console.log("Vérification de stock.games_id :", JSON.stringify(stock.games_id, null, 2));  // Ajoute cette ligne pour voir ce que contient réellement stock.games_id
+  fetchGamesInStock(sellerId: string): void {
+    this.stockService.getStocksBySellerId(sellerId).subscribe({
+      next: (stock: Stock) => {
+        console.log('Stock complet reçu :', JSON.stringify(stock, null, 2));
 
-    
-          if (!stock) {
-            console.log('Aucun stock trouvé pour ce vendeur.');
-            return;
-          }
-    
-          // Vérifie si games_id existe et est un tableau
-          if (!Array.isArray(stock.games_id) || stock.games_id.length === 0) {
-            console.error("games_id n'est pas un tableau valide ou est vide :", stock.games_id);
-            return;
-          }
-    
-          console.log('games_id est un tableau valide, traitement en cours...');
-    
-          // Réinitialiser le tableau des jeux en stock
-          this.gamesInStock = [];
-    
-          stock.games_id.forEach((gameData) => {
-            // Vérifie si gameData est un objet avec les bonnes propriétés
-            if (gameData && gameData.game_id) {
-              this.gameLabelService.getGameLabelById(gameData._id).subscribe({
-                next: (gameLabel: GameLabel) => {
-                  // Ajouter le GameLabel au tableau des jeux en stock
-                  this.gamesInStock.push(gameLabel);
-                  
-                  // Utiliser gameLabel.game_id pour récupérer le nom du jeu
-                  this.fetchGameName(gameLabel.game_id); // GameLabel a un game_id qui correspond à l'ID du jeu
-                  
-                  // Mettre à jour la vue
-                  this.cdr.detectChanges();
-                  console.log('GameLabel fetched:', gameLabel);
-                },
-                error: (error) => {
-                  console.error(`Erreur lors de la récupération du GameLabel avec ID ${gameData.game_id}:`, error);
-                },
-              });
-            } else {
-              console.error("Données de jeu manquantes ou invalides :", gameData);
-            }
-          });
-        },
-        error: (error) => {
-          console.error('Erreur lors de la récupération du stock :', error);
-        },
-      });
-    }
-    
-    loadStockById(id: string): void {
-      this.stockService.getStockById(id).subscribe(
-        (data) => {
-          this.totalStock = data;
-          console.log('Stock récupéré :', this.totalStock); // Vérifie la structure
-        },
-        (error) => {
-          console.error('Erreur lors de la récupération du stock:', error);
+        if (!stock) {
+          console.log('Aucun stock trouvé pour ce vendeur.');
+          return;
         }
-      );
-    }
-    
-    
-    
-    
-    
-    // Méthode pour récupérer les GameLabels associés au jeu
-    fetchGamesSold(sellerId: string): void {
-      this.stockService.getStocksByClientId(sellerId).subscribe({
-        next: (stock: Stock) => {
-          console.log('Stock complet reçu :', JSON.stringify(stock, null, 2));
-          console.log("Vérification de stock.games_sold :", JSON.stringify(stock.games_sold, null, 2));  // Ajoute cette ligne pour voir ce que contient réellement stock.games_id
 
-    
-          if (!stock) {
-            console.log('Aucun stock trouvé pour ce vendeur.');
-            return;
-          }
-    
-          // Vérifie si games_id existe et est un tableau
-          if (!Array.isArray(stock.games_sold) || stock.games_sold.length === 0) {
-            console.error("games_sold n'est pas un tableau valide ou est vide :", stock.games_sold);
-            return;
-          }
-    
-          console.log('games_sold est un tableau valide, traitement en cours...');
-    
-          // Réinitialiser le tableau des jeux en stock
-          this.gamesSold = [];
-    
-          stock.games_sold.forEach((gameData) => {
-            // Vérifie si gameData est un objet avec les bonnes propriétés
-            if (gameData && gameData.game_id) {
-              this.gameLabelService.getGameLabelById(gameData._id).subscribe({
-                next: (gameLabel: GameLabel) => {
-                  // Ajouter le GameLabel au tableau des jeux en stock
-                  this.gamesSold.push(gameLabel);
-                  
-                  // Utiliser gameLabel.game_id pour récupérer le nom du jeu
-                  this.fetchGameName(gameLabel.game_id); // GameLabel a un game_id qui correspond à l'ID du jeu
-                  
-                  // Mettre à jour la vue
-                  this.cdr.detectChanges();
-                  console.log('GameLabel fetched:', gameLabel);
-                },
-                error: (error) => {
-                  console.error(`Erreur lors de la récupération du GameLabel avec ID ${gameData.game_id}:`, error);
-                },
-              });
-            } else {
-              console.error("Données de jeu manquantes ou invalides :", gameData);
-            }
+        if (!Array.isArray(stock.games_id) || stock.games_id.length === 0) {
+          console.error("games_id n'est pas un tableau valide ou est vide :", stock.games_id);
+          return;
+        }
+
+        console.log('games_id est un tableau valide, traitement en cours...');
+        this.gamesInStock = [];
+
+        stock.games_id.forEach((gameId) => {
+          this.gameLabelService.getGameLabelById(gameId).subscribe({
+            next: (gameLabel: GameLabel) => {
+              this.gamesInStock.push(gameLabel);
+              this.fetchGameName(gameLabel.game_id);
+              this.cdr.detectChanges();
+              console.log('GameLabel fetched:', gameLabel);
+            },
+            error: (error) => {
+              console.error(`Erreur lors de la récupération du GameLabel avec ID ${gameId}:`, error);
+            },
           });
-        },
-        error: (error) => {
-          console.error('Erreur lors de la récupération du stock :', error);
-        },
-      });
-    }
-    
-    
+        });
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération du stock :', error);
+      },
+    });
+  }
 
+  fetchGamesSold(sellerId: string): void {
+    this.stockService.getStocksBySellerId(sellerId).subscribe({
+      next: (stock: Stock) => {
+        console.log('Stock complet reçu :', JSON.stringify(stock, null, 2));
 
+        if (!stock) {
+          console.log('Aucun stock trouvé pour ce vendeur.');
+          return;
+        }
+
+        if (!Array.isArray(stock.games_sold) || stock.games_sold.length === 0) {
+          console.error("games_sold n'est pas un tableau valide ou est vide :", stock.games_sold);
+          return;
+        }
+
+        console.log('games_sold est un tableau valide, traitement en cours...');
+        this.gamesSold = [];
+
+        stock.games_sold.forEach((gameId) => {
+          this.gameLabelService.getGameLabelById(gameId).subscribe({
+            next: (gameLabel: GameLabel) => {
+              this.gamesSold.push(gameLabel);
+              this.fetchGameName(gameLabel.game_id);
+              this.cdr.detectChanges();
+              console.log('GameLabel fetched:', gameLabel);
+            },
+            error: (error) => {
+              console.error(`Erreur lors de la récupération du GameLabel avec ID ${gameId}:`, error);
+            },
+          });
+        });
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération du stock :', error);
+      },
+    });
+  }
 }

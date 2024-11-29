@@ -12,6 +12,8 @@ import { EventService } from '../../services/event/event.service';
 import { Event } from '../../models/event/event';
 import { forkJoin, debounceTime, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { Stock } from '../../models/stock/stock';
+import { stockService } from '../../services/stock/stock.service';
 
 @Component({
   selector: 'app-deposit',
@@ -44,7 +46,8 @@ export class DepositComponent implements OnInit, OnDestroy {
     private gameLabelService: GameLabelService,
     private gameService: GameService,
     private cdr: ChangeDetectorRef,  // Injecter ChangeDetectorRef
-    private eventService: EventService
+    private eventService: EventService,
+    private stockService : stockService
   ) {}
 
   ngOnInit(): void {
@@ -234,6 +237,7 @@ export class DepositComponent implements OnInit, OnDestroy {
   }
 
 
+  
   endDeposit(): void {
     console.log('Début du dépôt');
   
@@ -242,39 +246,64 @@ export class DepositComponent implements OnInit, OnDestroy {
       return;
     }
   
-    const updateGameObservables = this.addedGamesLabels.map((gameLabel) => {
-      // Récupérer le jeu correspondant via l'ID
-      return this.gameService.getGameById(gameLabel.game_id).pipe(
-        // Une fois le jeu récupéré, préparer la mise à jour
-        switchMap((gameToUpdate: Game) => {
-          const updatedGame: Partial<Game> = { count: (gameToUpdate.count || 0) + 1 };
-          return this.gameService.updateGame(gameToUpdate._id, updatedGame); // Retourne un Observable
-        })
-      );
-    });
+    // Étape 1 : Publier les GameLabels via gameLabelService
+    this.gameLabelService.postGameLabels(this.addedGamesLabels).subscribe({
+      next: (createdGameLabels: GameLabel[]) => {
+        console.log('Jeux déposés avec succès :', createdGameLabels);
   
-    // Exécuter toutes les mises à jour des jeux
-    forkJoin(updateGameObservables).subscribe({
-      next: () => {
-        console.log('Tous les jeux ont été mis à jour.');
+        // Étape 2 : Récupérer tous les GameLabels associés au vendeur
+        this.gameLabelService.getGameLabelsBySellerId(this.sellerId).subscribe({
+          next: (sellerGameLabels: GameLabel[]) => {
+            console.log('GameLabels associés au vendeur récupérés :', sellerGameLabels);
   
-        // Une fois les jeux mis à jour, déposer les GameLabels
-        this.gameLabelService.postGameLabels(this.addedGamesLabels).subscribe({
-          next: (response) => {
-            console.log('Jeux déposés avec succès :', response);
-            this.addedGamesLabels = []; // Réinitialiser après le dépôt
+            // Étape 3 : Récupérer le stock actuel du vendeur
+            this.stockService.getStocksBySellerId(this.sellerId).subscribe({
+              next: (stock: Stock) => {
+                if (!stock || !stock._id) {
+                  console.error('Stock invalide ou non trouvé.');
+                  return;
+                }
+  
+                console.log('Stock actuel récupéré :', stock);
+  
+                // Étape 4 : Mettre à jour le tableau games_id avec les IDs des GameLabels
+                const updatedStock: Partial<Stock> = {
+                  games_id: sellerGameLabels.map(label => label._id), // Utiliser les IDs
+                };
+  
+                console.log('Mise à jour du stock avec :', updatedStock);
+  
+                // Mettre à jour le stock via StockService
+                this.stockService.updateStock(stock._id, updatedStock).subscribe({
+                  next: (updatedStock: Stock) => {
+                    console.log('Stock mis à jour avec succès :', updatedStock);
+                    this.addedGamesLabels = []; // Réinitialiser la liste après la mise à jour
+                  },
+                  error: (error) => {
+                    console.error('Erreur lors de la mise à jour du stock :', error);
+                  },
+                });
+              },
+              error: (error) => {
+                console.error('Erreur lors de la récupération du stock :', error);
+              },
+            });
           },
           error: (error) => {
-            console.error('Erreur lors du dépôt des jeux :', error);
+            console.error('Erreur lors de la récupération des GameLabels du vendeur :', error);
           },
         });
       },
       error: (error) => {
-        console.error('Erreur lors de la mise à jour des jeux :', error);
+        console.error('Erreur lors du dépôt des jeux :', error);
       },
     });
   }
   
+
   
   
+  
+  
+
 }

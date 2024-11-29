@@ -66,7 +66,7 @@ export class FinancialReportComponent implements OnInit {
   }
 
   fetchStockDetails(sellerId: string): void {
-    this.stockService.getStocksByClientId(sellerId).subscribe(stock => {
+    this.stockService.getStocksBySellerId(sellerId).subscribe(stock => {
       this.games_in_stock = stock.games_id.length;
     });
   }
