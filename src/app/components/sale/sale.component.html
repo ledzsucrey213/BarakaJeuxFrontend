@@ -63,7 +63,18 @@
       <!-- Total and Pay Section -->
       <div class="cart-footer">
         <p><strong>Total:</strong> {{ calculateTotal() }} €</p>
-        <button class="pay-button">PAY</button>
+        <!-- Modale pour le paiement -->
+        <div class="payment-modal" *ngIf="showPaymentModal">
+          <div class="modal-content">
+            <h3>Choisir le moyen de paiement</h3>
+            <p><strong>Total:</strong> {{ calculateTotal() }} €</p>
+            <div class="payment-options">
+              <button class="payment-button card-button" (click)="choosePayment('card')">Carte</button>
+              <button class="payment-button cash-button" (click)="choosePayment('cash')">Espèces</button>
+            </div>
+          </div>
+        </div>
+        <button class="pay-button" (click)="openPaymentModal()">PAY</button>
       </div>
     </div>
   

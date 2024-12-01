@@ -22,11 +22,7 @@ export class SaleService {
     ); }
 
 
-  getGameLabelsByBuyerId(buyerId: string): Observable<Sale[]> {
-    return this.http.get<Sale[]>(`${this.apiUrl}/seller/${buyerId}`);
-  }
-
-  postSale(sale: Omit<Sale, '_id'>[]): Observable<Sale> {
+  postSale(sale: Omit<Sale, '_id'>): Observable<Sale> {
     return this.http.post<Sale>(`${this.apiUrl}/`, sale);
   }
 

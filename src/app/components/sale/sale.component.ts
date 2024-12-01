@@ -12,6 +12,8 @@ import { Subject } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { HostListener } from '@angular/core';
 import { stockService } from '../../services/stock/stock.service';
+import { SaleService } from '../../services/sale/sale.service';
+import { Sale } from '../../models/sale/sale';
 
 @Component({
   selector: 'app-sale',
@@ -25,6 +27,7 @@ import { stockService } from '../../services/stock/stock.service';
 export class SaleComponent {
   eventId: string = '';
   eventName: string = '';
+  eventCommission : number = 0;
   remainingTime: string = '';
   private timer: any; // Pour stocker l'identifiant du setInterval
   cartGames : GameLabel[] = []
@@ -34,6 +37,8 @@ export class SaleComponent {
   searchSubject: Subject<string> = new Subject<string>();
   allGameLabels: GameLabel[] = [];
   dropdownVisible: boolean = false;
+  choosedPayment : 'card' | 'cash' = 'cash';
+  showPaymentModal: boolean = false;
 
 
   constructor(
@@ -42,7 +47,8 @@ export class SaleComponent {
     private gameService: GameService,
     private cdr: ChangeDetectorRef,  // Injecter ChangeDetectorRef
     private eventService: EventService,
-    private stockService : stockService
+    private stockService : stockService,
+    private saleService : SaleService
   ) {}
 
 
@@ -109,6 +115,7 @@ export class SaleComponent {
       next: (session: Event) => {
         this.eventName = session.name;  // Stocker le nom de la session
         this.eventId = session._id;
+        this.eventCommission = session.commission;
         console.log(`Fetching game for event_id ${session._id}`);
         this.calculateRemainingTime(new Date(session.end)); // Calcul initial
 
@@ -178,8 +185,41 @@ export class SaleComponent {
   addToCart(game: GameLabel): void {
     this.cartGames.push(game);
   }
+
+  // Méthode pour ouvrir la fenêtre modale
+  openPaymentModal(): void {
+    this.showPaymentModal = true;
+  }
+
+  // Méthode pour gérer le choix du paiement
+  choosePayment(method: 'card' | 'cash'): void {
+    this.choosedPayment = method;
+    this.showPaymentModal = false; // Ferme la fenêtre modale
+    this.pay(); // Effectue le paiement
+  }
   
   pay(): void {
+    // générer la vente
+    const newSale: Omit<Sale, '_id'> = {
+      total_price: this.calculateTotal(),
+      games_id : this.cartGames,
+      sale_date : new Date(),
+      total_commission : this.cartGames.length*this.eventCommission,
+      paid_with : this.choosedPayment
+    };
+
+    // Utiliser la méthode postSale du service
+    this.saleService.postSale(newSale).subscribe({
+      next: (sale) => {
+        console.log('Vente ajoutée:', sale);
+      },
+      error: (error) => {
+        console.error('Erreur lors de l\'ajout de l\'événement:', error);
+      },
+    });
+
+
+    // mettre à jour les stock
     if (!Array.isArray(this.cartGames) || this.cartGames.length === 0) {
       console.warn('Le panier est vide ou invalide.');
       return;
@@ -206,6 +246,9 @@ export class SaleComponent {
     Object.entries(gamesBySeller).forEach(([sellerId, soldGames]) => {
       this.stockService.sellGame(sellerId, soldGames);
     });
+
+    // vider jeux du panier
+    this.cartGames = [];
   }
 
 
