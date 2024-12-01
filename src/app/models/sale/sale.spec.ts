@@ -20,7 +20,6 @@ describe('Sale', () => {
       'sale123',
       100,
       [mockGameLabel],
-      'buyer123',
       new Date('2024-01-01T10:00:00Z'),
       10,
       'card'
@@ -31,7 +30,6 @@ describe('Sale', () => {
     expect(sale.games_id.length).toBe(1);
     expect(sale.games_id[0]._id).toBe('game123');
     expect(sale.games_id[0].seller_id).toBe('seller123');
-    expect(sale.buyer_id).toBe('buyer123');
     expect(sale.sale_date.toISOString()).toBe('2024-01-01T10:00:00.000Z');
     expect(sale.total_commission).toBe(10);
     expect(sale.paid_with).toBe('card');
@@ -69,7 +67,6 @@ describe('Sale', () => {
     expect(sale.games_id[0]._id).toBe('game456');
     expect(sale.games_id[0].seller_id).toBe('seller456');
     expect(sale.games_id[0].condition).toBe('very good');
-    expect(sale.buyer_id).toBe('buyer456');
     expect(sale.sale_date.toISOString()).toBe('2024-02-01T15:00:00.000Z');
     expect(sale.total_commission).toBe(20);
     expect(sale.paid_with).toBe('cash');
@@ -87,7 +84,6 @@ describe('Sale', () => {
     expect(sale._id).toBe('');
     expect(sale.total_price).toBe(50);
     expect(sale.games_id).toEqual([]);
-    expect(sale.buyer_id).toBe('buyer789');
     expect(sale.sale_date instanceof Date).toBe(true);
     expect(sale.total_commission).toBe(0);
     expect(sale.paid_with).toBe('card');
