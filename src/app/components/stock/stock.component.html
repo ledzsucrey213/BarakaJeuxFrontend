@@ -8,24 +8,40 @@
 
 <!-- Main Content -->
 <div class="main-content">
-  <!-- Left Side: Games In Stock -->
   <div class="games-section">
     <div class="registered-games">
       <h3>Games in stock: {{ gamesInStock.length }}</h3>
-
+  
       <!-- If no registered games -->
       <div *ngIf="gamesInStock.length === 0" class="empty-list">
         <p>No games in stock</p>
       </div>
-
+  
       <!-- List of registered games -->
       <div *ngFor="let gameLabel of gamesInStock" class="game-entry">
-        <div>Game title: {{ gamesNames[gameLabel.game_id] }}</div>
-        <div>Cost: {{ gameLabel.price }} €</div>
-        <div>Condition: {{ gameLabel.condition }}</div>
+        <input 
+          type="checkbox" 
+          [value]="gameLabel" 
+          (change)="toggleGameSelection(gameLabel, $event)" 
+          [checked]="isSelected(gameLabel)"
+        />
+        <div><span>Game:</span> {{ gamesNames[gameLabel.game_id] }}</div>
+        <div><span>Cost:</span> {{ gameLabel.price }} €</div>
+        <div><span>Condition:</span> {{ gameLabel.condition }}</div>
       </div>
+
+      <div class="action-buttons">
+        <button (click)="processSelectedGames()">Reclaim</button>
+        <div class="select-all-container">
+          <input type="checkbox" (change)="toggleSelectAll($event)" />
+          <span>Select All</span>
+        </div>
+      </div>
+      
+      
     </div>
-  </div> <!-- Properly closes the left side -->
+  </div>
+  
 
   <!-- Right Side: Games Sold -->
   <div class="games-section">
@@ -39,9 +55,9 @@
 
       <!-- List of registered games -->
       <div *ngFor="let gameLabel of gamesSold" class="game-entry">
-        <div>Game title: {{ gamesNames[gameLabel.game_id] }}</div>
-        <div>Cost: {{ gameLabel.price }} €</div>
-        <div>Condition: {{ gameLabel.condition }}</div>
+        <div><span>Game:</span> {{ gamesNames[gameLabel.game_id] }}</div>
+        <div><span>Cost:</span> {{ gameLabel.price }} €</div>
+        <div><span>Condition:</span> {{ gameLabel.condition }}</div>
       </div>
     </div>
   </div>

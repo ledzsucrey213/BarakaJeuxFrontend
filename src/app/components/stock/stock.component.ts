@@ -29,6 +29,7 @@ export class StockComponent implements OnInit, OnDestroy {
     email: 'placeholder@example.com', // Placeholder email
     role: 'seller',            // Default role
   });
+  selectedGames: GameLabel[] = [];
   
   eventId: string = '';
   eventName: string = '';  // Variable pour stocker le nom du jeu
@@ -211,4 +212,50 @@ export class StockComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+  toggleGameSelection(game: GameLabel, event: globalThis.Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.selectedGames.push(game);
+    } else {
+      this.selectedGames = this.selectedGames.filter((g) => g._id !== game._id);
+    }
+  }
+  
+  isSelected(game: GameLabel): boolean {
+    return this.selectedGames.some((g) => g._id === game._id);
+  }
+  
+
+  toggleSelectAll(event: globalThis.Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.selectedGames = [...this.gamesInStock];
+    } else {
+      this.selectedGames = [];
+    }
+  }
+
+  processSelectedGames(): void {
+    if (this.selectedGames.length === 0) {
+      alert('No games selected');
+      return;
+    }
+  
+    this.stockService.removeSelectedGames(this.sellerId._id, this.selectedGames).subscribe({
+      next: (updatedStock: Stock) => {
+        this.gamesInStock = this.gamesInStock.filter(
+          (game) => !this.selectedGames.some((selectedGame) => selectedGame._id === game._id)
+        );
+        this.selectedGames = [];
+        alert('Selected games have been removed successfully.');
+      },
+      error: (error) => {
+        console.error('Error while removing selected games:', error);
+        alert('An error occurred while processing the selected games.');
+      },
+    });
+  }
+  
+  
 }

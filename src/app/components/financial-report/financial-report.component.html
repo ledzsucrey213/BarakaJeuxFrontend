@@ -40,7 +40,7 @@
           <div class="report-item">
             <label>Games in stock: (current event only)</label>
             <span>{{ games_in_stock || 0 }}</span>
-            <button class="get-back-games" (click)="getBackGames(sellerId._id)">Reclaim my games</button>
+            <button class="get-back-games" *ngIf="games_in_stock.valueOf() > 0" (click)="getBackGames(sellerId._id)">Reclaim my games</button>
           </div>
         </div>
       </div>
