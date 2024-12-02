@@ -66,11 +66,30 @@
         </div>
 
         <!-- List of registered games -->
-        <div *ngFor="let gameLabel of gameLabels" class="game-entry">
+        <div *ngFor="let gameLabel of getPaginatedGameLabels()" class="game-entry">
           <div>Game title: {{ gamesNames[gameLabel.game_id] }}</div>
           <div>Cost: {{ gameLabel.price }} €</div>
           <div>Condition: {{ gameLabel.condition }}</div>
         </div>
+        
+        <div class="pagination-controls">
+          <button 
+            class="pagination-button" 
+            (click)="goToPreviousPage()" 
+            [disabled]="currentPage === 1">
+            Previous
+          </button>
+          
+          <span>Page {{ currentPage }} </span>
+          
+          <button 
+            class="pagination-button" 
+            (click)="goToNextPage()" 
+            [disabled]="currentPage * gamesPerPage >= gameLabels.length">
+            Next
+          </button>
+        </div>
+        
       </div>
 
       <div class="added-games">
@@ -93,6 +112,22 @@
 
   <!-- Bottom Action Buttons -->
   <div class="bottom-buttons">
-    <button class="action-button" (click)="endDeposit()">END DEPOSIT</button>
+    <button class="action-button" (click)="openPaymentModal()">END DEPOSIT</button>
   </div>
+
+  <!-- Modal de paiement -->
+  <div *ngIf="isPaymentModalOpen" class="modal-overlay">
+    <div class="modal">
+      <h3>Paiement</h3>
+      <p>Total à régler : {{ calculateTotal() | currency:'EUR' }}</p>
+      <p>Vous bénéficiez d'une remise de {{ discountPercentage }}%</p>
+      <div class="payment-options">
+        <button (click)="processPayment('cash')">Payer en espèces</button>
+        <button (click)="processPayment('card')">Payer par carte</button>
+      </div>
+      <button class="close-modal" (click)="closePaymentModal()">Annuler</button>
+    </div>
+  </div>
+
+
 </div>

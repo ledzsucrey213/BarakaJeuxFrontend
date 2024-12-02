@@ -5,7 +5,6 @@ export class GameLabel {
     price: number;
     event_id: string;
     condition: 'new' | 'very good' | 'good' | 'poor';
-    deposit_fee: number;
     is_Sold: boolean;
     creation: Date;
     is_On_Sale: boolean;
@@ -17,7 +16,6 @@ export class GameLabel {
       this.price = data.price || 0;
       this.event_id = data.event_id || '';
       this.condition = data.condition || 'new';
-      this.deposit_fee = data.deposit_fee || 0;
       this.is_Sold = data.is_Sold || false;
       this.creation = data.creation ? new Date(data.creation) : new Date();
       this.is_On_Sale = data.is_On_Sale !== undefined ? data.is_On_Sale : true;
@@ -32,7 +30,6 @@ export class GameLabel {
         price: json.price,
         event_id: json.event_id,
         condition: json.condition,
-        deposit_fee: json.deposit_fee,
         is_Sold: json.is_Sold,
         creation: json.creation,
         is_On_Sale: json.is_On_Sale,
