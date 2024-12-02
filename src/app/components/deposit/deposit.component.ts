@@ -44,7 +44,7 @@ export class DepositComponent implements OnInit, OnDestroy {
   gamesPerPage: number = 5; // Nombre de jeux par page
   isPaymentModalOpen: boolean = false; // Pour gérer l'affichage de la modal
   discountPercentage: number = 0; // Pour afficher le pourcentage de remise
-
+  
 
   constructor(
     private route: ActivatedRoute,
