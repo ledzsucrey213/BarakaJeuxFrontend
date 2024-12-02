@@ -243,7 +243,6 @@ export class DepositComponent implements OnInit, OnDestroy {
       price: this.price,
       event_id: this.eventId, // Remplacer par l'ID réel de l'event
       condition: this.condition as 'new' | 'very good' | 'good' | 'poor',
-      deposit_fee: 5, // Valeur par défaut
       is_Sold: false,
       creation: new Date(),
       is_On_Sale: true,

@@ -7,6 +7,7 @@ export class Event {
     end: Date;
     is_active: boolean;
     commission: number;
+    deposit_fee : number
   
     constructor(data: Partial<Event>) {
       this._id = data._id || '';
@@ -15,6 +16,7 @@ export class Event {
       this.end = data.end ? new Date(data.end) : new Date();
       this.is_active = data.is_active || false;
       this.commission = data.commission || 0;
+      this.deposit_fee = data.deposit_fee || 0;
     }
   
     // Méthode pour créer une instance d'Event à partir d'un objet JSON
@@ -26,6 +28,7 @@ export class Event {
         end: json.end,
         is_active: json.is_active,
         commission: json.commission,
+        deposit_fee : json.deposit_fee
       });
     }
   }
