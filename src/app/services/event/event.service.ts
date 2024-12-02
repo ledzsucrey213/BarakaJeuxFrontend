@@ -24,6 +24,12 @@ export class EventService {
       map((json) => Event.createFrom(json)) // Mapper l'objet JSON au modèle Game
     ); }
 
+    getEventById(id: string): Observable<Event> {
+      return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+        map((data) => Event.createFrom(data))
+      );
+    }
+
   postEvent(event: Omit<Event, '_id'>): Observable<Event> {
     return this.http.post<Event>(`${this.apiUrl}/`, Event);
   }

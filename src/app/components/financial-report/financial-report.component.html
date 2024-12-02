@@ -21,38 +21,38 @@
       </div>
     </div>
 
-    <div class="report-section" *ngIf="financialReport">
-      <label>Report:</label>
-      <div class="report-details">
-        <div class="report-item">
-          <label>Total Earned:</label>
-          <span>{{ financialReport.total_earned || 0 }} €</span>
-        </div>
-        <div class="report-item">
-          <label>Total Due:</label>
-          <span>{{ financialReport.total_due || 0 }} €</span>
-        </div>
-        <div class="report-item">
-          <label>Report Date:</label>
-          <span>{{ financialReport.report_date || 'Not generated yet' }}</span>
-        </div>
-        <div class="report-item">
-          <label>Games in stock: (current event only)</label>
-          <span>{{ games_in_stock || 0 }}</span>
-          <button class="get-back-games" (click)="getBackGames(sellerId._id)">Reclaim my games</button>
+    <div class="container">
+      <div id="report-section" class="report-section" *ngIf="financialReport">
+        <label>Report:</label>
+        <div class="report-details">
+          <div class="report-item">
+            <label>Total Earned:</label>
+            <span>{{ financialReport.total_earned || 0 }} €</span>
+          </div>
+          <div class="report-item">
+            <label>Total Due:</label>
+            <span>{{ financialReport.total_due || 0 }} €</span>
+          </div>
+          <div class="report-item">
+            <label>Report Date:</label>
+            <span>{{ financialReport.report_date | date:'yyyy-MM-dd' }}</span>
+          </div>
+          <div class="report-item">
+            <label>Games in stock: (current event only)</label>
+            <span>{{ games_in_stock || 0 }}</span>
+            <button class="get-back-games" (click)="getBackGames(sellerId._id)">Reclaim my games</button>
+          </div>
         </div>
       </div>
+    
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button (click)="generatePDF()">EXPORT TO PDF</button>
+        <button class="primary" (click)="takeMoney()">TAKE YOUR MONEY</button>
+      </div>
+    
+      <div class="footer">
+        <span>Admin</span>
+        <span>Manager</span>
+      </div>
     </div>
-
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-      <button (click)="testExportToPDF()">EXPORT TO PDF</button>
-      <button class="primary" (click)="takeMoney()">TAKE YOUR MONEY</button>
-    </div>
-  </div>
-
-  <div class="footer">
-    <span>Admin</span>
-    <span>Manager</span>
-  </div>
-</div>

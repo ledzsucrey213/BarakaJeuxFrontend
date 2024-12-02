@@ -177,7 +177,7 @@ export class stockService {
   console.log('Nouveau tableau games_sold :', updatedGamesSold);
 
             // Sauvegarder le stock mis à jour
-            this.updateStock(stock).subscribe({
+            this.updateStock(stock._id, stock).subscribe({
               next: (updatedStock: Stock) => {
                 observer.next(updatedStock);
                 observer.complete();

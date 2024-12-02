@@ -58,6 +58,12 @@
       }
     }
 
+    .container {
+      max-width: 1500px; /* Définir la largeur maximale de la page */
+      margin: 0 auto; /* Centrer le contenu horizontalement */
+      padding: 0 20px; /* Ajouter un peu de padding pour les marges */
+    }
+
     .report-section {
       margin-bottom: 20px; /* Add space below the report section */
       

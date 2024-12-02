@@ -9,7 +9,6 @@ import { UserService } from '../../services/user/user.service';
 import { ReportService } from '../../services/report/report.service';
 import { stockService } from '../../services/stock/stock.service';
 import { Router } from '@angular/router';
-import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 @Component({
@@ -67,9 +66,17 @@ export class FinancialReportComponent implements OnInit {
 
   fetchStockDetails(sellerId: string): void {
     this.stockService.getStocksBySellerId(sellerId).subscribe(stock => {
-      this.games_in_stock = stock.games_id.length;
+      // Vérifier si l'événement sélectionné est encore actif
+      const selectedEvent = this.events.find(event => event._id === this.eventSelected);
+      if (selectedEvent && new Date(selectedEvent.end) > new Date()) {
+        this.games_in_stock = stock.games_id.length;
+      } else {
+        this.games_in_stock = 0; // Si l'événement est terminé, pas de jeux en stock
+      }
     });
   }
+  
+  
 
   loadEvents(): void {
     this.eventService.getEvents().subscribe(events => {
@@ -84,13 +91,44 @@ export class FinancialReportComponent implements OnInit {
 
   onEventChange(): void {
     this.fetchFinancialReport(this.eventSelected);
+    this.fetchStockDetails(this.sellerId._id); // Mettre à jour les stocks
   }
+  
 
   fetchFinancialReport(eventId: string): void {
     this.reportService.getReportByEventId(eventId).subscribe(report => {
-      this.financialReport = report;
+      if (report) {
+        const now = new Date();
+  
+        // Fetch the event details to get the end date
+        this.eventService.getEventById(eventId).subscribe(event => {
+          if (event && event.end) {
+            const eventEndDate = new Date(event.end);
+            this.eventName = event.name;
+            
+            // Store the end date
+            this.remainingTime = eventEndDate.toISOString();
+            this.calculateRemainingTime(eventEndDate);
+  
+            // Decide the report date based on event end date
+            if (now <= eventEndDate) {
+              report.report_date = now.toISOString(); // Use the current date
+            } else {
+              report.report_date = eventEndDate.toISOString(); // Use the event end date
+            }
+          } else {
+            console.warn('Invalid or missing end date for the event.');
+            report.report_date = now.toISOString(); // Fallback to the current date
+          }
+        });
+  
+        this.financialReport = report;
+      }
     });
   }
+  
+  
+  
 
   fetchEventDetails(): void {
     this.eventService.getEventActive().subscribe({
@@ -160,40 +198,20 @@ export class FinancialReportComponent implements OnInit {
     // Implement the logic for "get back my games" action
     this.router.navigate([`/stock/${sellerId}`]);
   }
-  exportToPDF(): void {
-    const data = document.getElementById('report-section'); // Ensure the element ID matches
-    if (!data) {
-      console.error('Element with ID "report-section" not found.');
-      return;
-    }
+  generatePDF() {
+    // Créez une instance de jsPDF
+    const doc = new jsPDF();
 
-    html2canvas(data).then(canvas => {
-      const imgWidth = 208;
-      const imgHeight = canvas.height * imgWidth / canvas.width;
-      const contentDataURL = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
-      pdf.save('financial-report.pdf'); // This triggers the download
-    }).catch(error => {
-      console.error('Error generating PDF:', error);
-    });
+    // Ajoutez du texte à votre document PDF
+    // Add the attributes of the financial report to the PDF
+    doc.text('Financial Report', 10, 10);
+    doc.text(`Total Earned: ${this.financialReport.total_earned || 0} €`, 10, 20);
+    doc.text(`Total Due: ${this.financialReport.total_due || 0} €`, 10, 30);
+    doc.text(`Report Date: ${this.financialReport.report_date ? new Date(this.financialReport.report_date).toLocaleDateString() : 'Not generated yet'}`, 10, 40);
+    doc.text(`Games in Stock: ${this.games_in_stock || 0}`, 10, 50);
+
+    // Téléchargez le PDF avec le nom "Yanis_and_Jalil.pdf"
+    doc.save('Yanis_and_Jalil.pdf');
   }
-
-    // Method to set mock data and test exportToPDF
-    testExportToPDF(): void {
-      this.financialReport = {
-        total_earned: 1000,
-        total_due: 500,
-        report_date: new Date(),
-      };
-      this.games_in_stock = 10;
-
-          // Check if the mock data is set correctly
-    if (!this.financialReport || !this.games_in_stock) {
-      console.error('Mock data is not set correctly.');
-      return;
-    }
-      this.exportToPDF();
-    }
   
 }
