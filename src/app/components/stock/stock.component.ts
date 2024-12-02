@@ -11,13 +11,14 @@ import { GameService } from '../../services/game/game.service';
 import { EventService } from '../../services/event/event.service';
 import { Game } from '../../models/game/game';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-stock',
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.scss'],
   standalone: true,
-  imports : [CommonModule]
+  imports : [CommonModule, RouterModule]
 })
 export class StockComponent implements OnInit, OnDestroy {
   gamesSold: GameLabel[] = [];

@@ -21,7 +21,10 @@ export class ReportService {
   }
 
   postReport(report: Omit<Report, '_id'>): Observable<Report> {
-    return this.http.post<Report>(`${this.apiUrl}/`, report);
+    return this.http.post<Report>(`${this.apiUrl}/`, report); }
+
+  getReportByEventIdAndSellerId(eventId: string, sellerId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}?event_id=${eventId}&seller_id=${sellerId}`);
   }
 
 }
