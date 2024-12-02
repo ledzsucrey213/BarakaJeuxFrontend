@@ -80,7 +80,39 @@
   
     <!-- Footer -->
     <div class="footer">
-      <a href="#" class="invoice-link">Generate an invoice</a>
+      <button (click)="openInvoiceModal()">Generate Invoice</button>
+    </div>
+
+
+
+        <!-- Modale de gestion des clients -->
+    <div *ngIf="showInvoiceModal" class="payment-modal">
+      <div class="modal-content">
+        <h2>Gestion des clients</h2>
+        <div>
+          <input
+            type="text"
+            [(ngModel)]="searchClient"
+            (input)="searchClients()"
+            placeholder="Rechercher un client par nom ou prénom"
+          />
+        </div>
+        <ul>
+          <li *ngFor="let client of filteredClients" (click)="selectClient(client)">
+            {{ client.firstname }} {{ client.name }}
+          </li>
+        </ul>
+        <button (click)="createNewClient()">Créer un nouveau client</button>
+
+        <div *ngIf="isNewClient">
+          <input type="text" [(ngModel)]="newClientData.firstname" placeholder="Prénom" />
+          <input type="text" [(ngModel)]="newClientData.name" placeholder="Nom" />
+          <input type="text" [(ngModel)]="newClientData.address" placeholder="Adresse" />
+          <input type="email" [(ngModel)]="newClientData.email" placeholder="Email" />
+        </div>
+
+        <button (click)="confirmClient()">Valider</button>
+      </div>
     </div>
   </div>
   

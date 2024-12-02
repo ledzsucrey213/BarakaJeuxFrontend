@@ -14,6 +14,10 @@ import { HostListener } from '@angular/core';
 import { stockService } from '../../services/stock/stock.service';
 import { SaleService } from '../../services/sale/sale.service';
 import { Sale } from '../../models/sale/sale';
+import { User } from '../../models/user/user';
+import { UserService } from '../../services/user/user.service';
+import { Invoice } from '../../models/invoice/invoice';
+import { InvoiceService } from '../../services/invoice/invoice.service';
 
 @Component({
   selector: 'app-sale',
@@ -39,6 +43,12 @@ export class SaleComponent {
   dropdownVisible: boolean = false;
   choosedPayment : 'card' | 'cash' = 'cash';
   showPaymentModal: boolean = false;
+  showInvoiceModal: boolean = false;
+  searchClient: string = '';
+  filteredClients: User[] = [];
+  selectedClient: User | null = null;
+  newClientData: Omit<User, '_id'> = { firstname: '', name: '', address: '', email: '', role : 'buyer' };
+  isNewClient: boolean = false;
 
 
   constructor(
@@ -48,7 +58,9 @@ export class SaleComponent {
     private cdr: ChangeDetectorRef,  // Injecter ChangeDetectorRef
     private eventService: EventService,
     private stockService : stockService,
-    private saleService : SaleService
+    private saleService : SaleService,
+    private userService : UserService,
+    private invoiceService : InvoiceService
   ) {}
 
 
@@ -197,60 +209,112 @@ export class SaleComponent {
     this.showPaymentModal = false; // Ferme la fenêtre modale
     this.pay(); // Effectue le paiement
   }
+
+  // Méthode pour ouvrir la fenêtre de gestion des clients
+  openInvoiceModal(): void {
+    this.showInvoiceModal = true;
+    this.searchClient = '';
+    this.filteredClients = [];
+    this.selectedClient = null;
+    this.isNewClient = false;
+  }
+
+
+  // Méthode pour rechercher des clients
+  searchClients(): void {
+    const searchTerm = this.searchClient.trim().toLowerCase();
+    if (searchTerm.length > 0) {
+      this.userService.getAllUsers().subscribe({
+        next: (users: User[]) => {
+          // Filtrer les utilisateurs ayant le rôle 'buyer' et correspondant à la recherche
+          this.filteredClients = users.filter(
+            (user) =>
+              user.role === 'buyer' &&
+              (user.firstname?.toLowerCase().includes(searchTerm) ||
+                user.name?.toLowerCase().includes(searchTerm))
+          );
+        },
+        error: (error) => console.error('Erreur lors de la recherche des utilisateurs:', error),
+      });
+    } else {
+      this.filteredClients = [];
+    }
+  }
+
+  // Méthode pour sélectionner un client existant
+  selectClient(client: User): void {
+    this.selectedClient = client;
+    this.isNewClient = false;
+  }
+
+  // Méthode pour créer un nouveau client
+  createNewClient(): void {
+    this.selectedClient = null;
+    this.isNewClient = true;
+  }
+
+  // Méthode pour valider la sélection ou la création du client
+  confirmClient(): void {
+    this.showInvoiceModal = false;
+  }
   
   pay(): void {
-    // générer la vente
     const newSale: Omit<Sale, '_id'> = {
       total_price: this.calculateTotal(),
-      games_id : this.cartGames,
-      sale_date : new Date(),
-      total_commission : this.cartGames.length*this.eventCommission,
-      paid_with : this.choosedPayment
+      games_id: this.cartGames,
+      sale_date: new Date(),
+      total_commission: this.cartGames.length * this.eventCommission,
+      paid_with: this.choosedPayment,
     };
 
-    // Utiliser la méthode postSale du service
+    // Créer la vente
     this.saleService.postSale(newSale).subscribe({
       next: (sale) => {
         console.log('Vente ajoutée:', sale);
+
+        if (this.selectedClient) {
+          // Cas 1 : Client existant
+          this.createInvoice(sale._id, this.selectedClient._id);
+        } else if (this.isNewClient) {
+          // Cas 2 : Nouveau client
+          this.userService.postUser(this.newClientData).subscribe({
+            next: (createdUser) => {
+              console.log('Utilisateur créé:', createdUser);
+
+              // Récupérer l'utilisateur créé pour obtenir son ID
+              this.userService.getAllUsers().subscribe({
+                next: (users) => {
+                  const newUser = users.find((user) => user.email === this.newClientData.email);
+                  if (newUser) {
+                    this.createInvoice(sale._id, newUser._id);
+                  }
+                },
+                error: (error) => console.error('Erreur lors de la récupération des utilisateurs:', error),
+              });
+            },
+            error: (error) => console.error('Erreur lors de la création du nouvel utilisateur:', error),
+          });
+        }
       },
-      error: (error) => {
-        console.error('Erreur lors de l\'ajout de l\'événement:', error);
-      },
+      error: (error) => console.error('Erreur lors de l\'ajout de la vente:', error),
     });
 
-
-    // mettre à jour les stock
-    if (!Array.isArray(this.cartGames) || this.cartGames.length === 0) {
-      console.warn('Le panier est vide ou invalide.');
-      return;
-    }
-  
-    // Organiser les jeux par sellerId
-    const gamesBySeller: { [sellerId: string]: GameLabel[] } = this.cartGames.reduce((acc, game) => {
-      if (!game.seller_id) {
-        console.warn('Un jeu sans sellerId a été trouvé et sera ignoré :', game);
-        return acc;
-      }
-  
-      if (!acc[game.seller_id]) {
-        acc[game.seller_id] = [];
-      }
-  
-      acc[game.seller_id].push(game);
-      return acc;
-    }, {} as { [sellerId: string]: GameLabel[] });
-  
-    console.log('Organisation des jeux par sellerId :', gamesBySeller);
-  
-    // Appeler sellGame pour chaque groupe de jeux d'un même sellerId
-    Object.entries(gamesBySeller).forEach(([sellerId, soldGames]) => {
-      this.stockService.sellGame(sellerId, soldGames);
-    });
-
-    // vider jeux du panier
+    // Vider le panier
     this.cartGames = [];
   }
 
+  // Méthode pour créer une facture
+  createInvoice(saleId: string, buyerId: string): void {
+    const newInvoice: Omit<Invoice, '_id'> = {
+      sale_id: saleId,
+      buyer_id: buyerId,
+    };
+
+    this.invoiceService.postInvoice(newInvoice).subscribe({
+      next: (invoice) => console.log('Facture créée:', invoice),
+      error: (error) => console.error('Erreur lors de la création de la facture:', error),
+    });
+  }
 
 
 

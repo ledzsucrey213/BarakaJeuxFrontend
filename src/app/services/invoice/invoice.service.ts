@@ -19,4 +19,9 @@ export class InvoiceService {
   getInvoicesByClientId(clientId: string): Observable<Invoice[]> {
     return this.http.get<Invoice[]>(`${this.apiUrl}/buyer/${clientId}`);
   }
+
+  postInvoice(invoice: Omit<Invoice, '_id'>): Observable<Invoice> {
+    return this.http.post<Invoice>(`${this.apiUrl}/`, invoice);
+  }
+
 }
