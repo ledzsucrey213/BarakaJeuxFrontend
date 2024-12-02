@@ -48,4 +48,8 @@ export class UserService {
     const url = `${this.apiUrl}/${userId}`; // URL de la ressource à mettre à jour
     return this.http.put<User>(url, updatedUser);
   }
+
+  postUser(user: Omit<User, '_id'>): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/`, user);
+  }
 }
