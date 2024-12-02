@@ -66,11 +66,30 @@
         </div>
 
         <!-- List of registered games -->
-        <div *ngFor="let gameLabel of gameLabels" class="game-entry">
+        <div *ngFor="let gameLabel of getPaginatedGameLabels()" class="game-entry">
           <div>Game title: {{ gamesNames[gameLabel.game_id] }}</div>
           <div>Cost: {{ gameLabel.price }} €</div>
           <div>Condition: {{ gameLabel.condition }}</div>
         </div>
+        
+        <div class="pagination-controls">
+          <button 
+            class="pagination-button" 
+            (click)="goToPreviousPage()" 
+            [disabled]="currentPage === 1">
+            Previous
+          </button>
+          
+          <span>Page {{ currentPage }} </span>
+          
+          <button 
+            class="pagination-button" 
+            (click)="goToNextPage()" 
+            [disabled]="currentPage * gamesPerPage >= gameLabels.length">
+            Next
+          </button>
+        </div>
+        
       </div>
 
       <div class="added-games">

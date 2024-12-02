@@ -39,6 +39,8 @@ export class DepositComponent implements OnInit, OnDestroy {
   filteredGames: Game[] = []; // Jeux filtrés pour l'affichage
   searchSubject: Subject<string> = new Subject<string>();
   addedGamesLabels: Omit<GameLabel, '_id'>[] = []; // Tableau pour les GameLabels ajoutés
+  currentPage: number = 1; // Page actuelle
+  gamesPerPage: number = 5; // Nombre de jeux par page
 
 
   constructor(
@@ -61,6 +63,8 @@ export class DepositComponent implements OnInit, OnDestroy {
       this.fetchGameLabels(this.sellerId);  // Récupérer les GameLabels pour ce vendeur
     });
   }
+
+  
 
   ngOnDestroy(): void {
     // Nettoyer le timer lorsque le composant est détruit
@@ -194,6 +198,26 @@ export class DepositComponent implements OnInit, OnDestroy {
     this.filteredGames = []; // Vider la liste après la sélection
     console.log('Jeu sélectionné :', game); // Debugging
   }
+
+  getPaginatedGameLabels(): GameLabel[] {
+    const startIndex = (this.currentPage - 1) * this.gamesPerPage;
+    const endIndex = startIndex + this.gamesPerPage;
+    return this.gameLabels.slice(startIndex, endIndex);
+  }
+
+  goToNextPage(): void {
+    if (this.currentPage * this.gamesPerPage < this.gameLabels.length) {
+      this.currentPage++;
+    }
+  }
+  
+  goToPreviousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  
 
 
 
