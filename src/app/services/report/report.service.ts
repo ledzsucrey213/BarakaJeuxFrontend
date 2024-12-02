@@ -20,4 +20,8 @@ export class ReportService {
     return this.http.get<any>(`${this.apiUrl}?event_id=${eventId}`);
   }
 
+  getReportByEventIdAndSellerId(eventId: string, sellerId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}?event_id=${eventId}&seller_id=${sellerId}`);
+  }
+
 }

@@ -25,9 +25,9 @@
           (change)="toggleGameSelection(gameLabel, $event)" 
           [checked]="isSelected(gameLabel)"
         />
-        <div><span>Game:</span> {{ gamesNames[gameLabel.game_id] }}</div>
-        <div><span>Cost:</span> {{ gameLabel.price }} €</div>
-        <div><span>Condition:</span> {{ gameLabel.condition }}</div>
+          <div><span>Game:</span> {{ gamesNames[gameLabel.game_id] }}</div>
+          <div><span>Cost:</span> {{ gameLabel.price }} €</div>
+          <div><span>Condition:</span> {{ gameLabel.condition }}</div>
       </div>
 
       <div class="action-buttons">
