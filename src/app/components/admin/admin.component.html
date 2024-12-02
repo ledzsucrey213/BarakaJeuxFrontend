@@ -37,6 +37,10 @@
           Commission Rate (%):
           <input type="number" [(ngModel)]="newEvent.commission" min="0" />
         </label>
+        <label>
+          Deposit Fee (%):
+          <input type="number" [(ngModel)]="newEvent.deposit_fee" min="0" />
+        </label>
         <button (click)="addEvent()">Save Event</button>
       </div>
       <h2>Events :</h2>

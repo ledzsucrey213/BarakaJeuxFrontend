@@ -28,6 +28,7 @@ export class DepositComponent implements OnInit, OnDestroy {
   sellerId: string = '';
   eventId: string = '';
   eventName: string = '';  // Variable pour stocker le nom du jeu
+  eventDepositFee : number = 0;
   searchName: string = ''; 
   price: number | null = null; 
   quantity: number | null = null; 
@@ -41,6 +42,8 @@ export class DepositComponent implements OnInit, OnDestroy {
   addedGamesLabels: Omit<GameLabel, '_id'>[] = []; // Tableau pour les GameLabels ajoutés
   currentPage: number = 1; // Page actuelle
   gamesPerPage: number = 5; // Nombre de jeux par page
+  isPaymentModalOpen: boolean = false; // Pour gérer l'affichage de la modal
+  discountPercentage: number = 0; // Pour afficher le pourcentage de remise
 
 
   constructor(
@@ -79,6 +82,7 @@ export class DepositComponent implements OnInit, OnDestroy {
       next: (session: Event) => {
         this.eventName = session.name;  // Stocker le nom de la session
         this.eventId = session._id;
+        this.eventDepositFee = session.deposit_fee;
         console.log(`Fetching game for event_id ${session._id}`);
         this.calculateRemainingTime(new Date(session.end)); // Calcul initial
 
@@ -217,6 +221,52 @@ export class DepositComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Ouvrir la modal
+  openPaymentModal(): void {
+    this.discountPercentage = this.calculateDiscount();
+    this.isPaymentModalOpen = true;
+  }
+
+  // Fermer la modal
+  closePaymentModal(): void {
+    this.isPaymentModalOpen = false;
+  }
+
+  // Calculer la remise
+  calculateDiscount(): number {
+    const gameCount = this.addedGamesLabels.length;
+
+    if (gameCount >= 10) {
+      return 50; // Remise de 50% pour 10 jeux ou plus
+    } else if (gameCount >= 5) {
+      return 20; // Remise de 20% pour 5 à 9 jeux
+    }
+    return 0; // Pas de remise en dessous de 5 jeux
+  }
+
+  // Calculer le total à régler
+  calculateTotal(): number {
+    const gameCount = this.addedGamesLabels.length;
+    const discount = this.calculateDiscount();
+  
+    // Calculer le coût total avant la remise
+    const totalBaseFee = this.addedGamesLabels.reduce((acc, gameLabel) => {
+      return acc + (gameLabel.price ?? 0) * (this.eventDepositFee / 100);
+    }, 0);
+  
+    // Appliquer la remise
+    const discountedTotal = totalBaseFee - (totalBaseFee * discount) / 100;
+  
+    return discountedTotal;
+  }
+  
+
+  // Gérer le paiement
+  processPayment(method: 'cash' | 'card'): void {
+    console.log(`Paiement par ${method} accepté.`);
+    this.closePaymentModal();
+    this.endDeposit(); // Appeler la méthode endDeposit après confirmation
+  }
   
 
 

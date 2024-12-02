@@ -32,6 +32,7 @@ export class AdminComponent {
     start: new Date(),
     end: new Date(),
     commission: 0,
+    deposit_fee: 0
   };
   // Propriétés pour gérer l'édition d'utilisateur
   selectedUserId: string | null = null; // ID de l'utilisateur sélectionné pour édition
@@ -180,6 +181,7 @@ addEvent(): void {
     this.newEvent.start &&
     this.newEvent.end &&
     this.newEvent.commission
+    && this.newEvent.deposit_fee
   ) {
     // Calculer is_active en fonction de la date de début
     const today = new Date().toDateString(); // Date actuelle (jour, mois, année)
@@ -192,7 +194,8 @@ addEvent(): void {
       start: this.newEvent.start,
       end: this.newEvent.end,
       commission: this.newEvent.commission,
-      is_active: isActive // Ajouter l'attribut calculé
+      is_active: isActive, // Ajouter l'attribut calculé
+      deposit_fee : this.newEvent.deposit_fee
     };
 
     // Utiliser la méthode postEvent du service
