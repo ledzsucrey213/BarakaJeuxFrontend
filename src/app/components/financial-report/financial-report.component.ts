@@ -10,6 +10,7 @@ import { ReportService } from '../../services/report/report.service';
 import { stockService } from '../../services/stock/stock.service';
 import { Router } from '@angular/router';
 import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-financial-report',
@@ -161,16 +162,38 @@ export class FinancialReportComponent implements OnInit {
   }
   exportToPDF(): void {
     const data = document.getElementById('report-section'); // Ensure the element ID matches
-    if (data) {
-      html2canvas(data).then(canvas => {
-        const imgWidth = 208;
-        const imgHeight = canvas.height * imgWidth / canvas.width;
-        const contentDataURL = canvas.toDataURL('image/png');
-        // const pdf = new jsPDF('p', 'mm', 'a4');
-        // pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
-        // pdf.save('financial-report.pdf');
-      });
+    if (!data) {
+      console.error('Element with ID "report-section" not found.');
+      return;
     }
+
+    html2canvas(data).then(canvas => {
+      const imgWidth = 208;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      const contentDataURL = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
+      pdf.save('financial-report.pdf'); // This triggers the download
+    }).catch(error => {
+      console.error('Error generating PDF:', error);
+    });
   }
+
+    // Method to set mock data and test exportToPDF
+    testExportToPDF(): void {
+      this.financialReport = {
+        total_earned: 1000,
+        total_due: 500,
+        report_date: new Date(),
+      };
+      this.games_in_stock = 10;
+
+          // Check if the mock data is set correctly
+    if (!this.financialReport || !this.games_in_stock) {
+      console.error('Mock data is not set correctly.');
+      return;
+    }
+      this.exportToPDF();
+    }
   
 }

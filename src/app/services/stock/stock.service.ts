@@ -147,8 +147,53 @@ export class stockService {
       },
     });
   }
+
+    // Nouvelle fonction pour supprimer les jeux sélectionnés
+    removeSelectedGames(sellerId: string, selectedGames: any[]): Observable<Stock> {
+      return new Observable(observer => {
+        this.getStocksBySellerId(sellerId).subscribe({
+          next: (stock: Stock) => {
+            if (!stock || !stock._id) {
+              console.error('Stock invalide ou non trouvé.');
+              observer.error('Stock invalide ou non trouvé.');
+              return;
+            }
   
-  
-  
+  console.log('Stock actuel récupéré :', stock);
+
+  // Retirer les jeux sélectionnés de games_id et games_sold
+  const updatedGamesId = stock.games_id.filter(
+    game => !selectedGames.some(selectedGame => selectedGame._id === game._id)
+  );
+  const updatedGamesSold = stock.games_sold.filter(
+    game => !selectedGames.some(selectedGame => selectedGame._id === game._id)
+  );
+
+  // Mettre à jour le stock
+  stock.games_id = updatedGamesId;
+  stock.games_sold = updatedGamesSold;
+
+  console.log('Nouveau tableau games_id :', updatedGamesId);
+  console.log('Nouveau tableau games_sold :', updatedGamesSold);
+
+            // Sauvegarder le stock mis à jour
+            this.updateStock(stock).subscribe({
+              next: (updatedStock: Stock) => {
+                observer.next(updatedStock);
+                observer.complete();
+              },
+              error: (error) => {
+                console.error('Erreur lors de la mise à jour du stock :', error);
+                observer.error(error);
+              }
+            });
+          },
+          error: (error) => {
+            console.error('Erreur lors de la récupération du stock :', error);
+            observer.error(error);
+          }
+        });
+      });
+    }
 
 }
