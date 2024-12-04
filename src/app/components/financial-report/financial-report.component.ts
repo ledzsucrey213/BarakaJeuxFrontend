@@ -84,19 +84,19 @@ export class FinancialReportComponent implements OnInit {
       if (this.events.length > 0) {
         this.events.sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime());
         this.eventSelected = this.events[0]._id;
-        this.fetchFinancialReport(this.eventSelected);
+        this.fetchFinancialReport(this.eventSelected, this.sellerId._id);
       }
     });
   }
 
   onEventChange(): void {
-    this.fetchFinancialReport(this.eventSelected);
+    this.fetchFinancialReport(this.eventSelected, this.sellerId._id); // Mettre à jour le rapport financier
     this.fetchStockDetails(this.sellerId._id); // Mettre à jour les stocks
   }
   
 
-  fetchFinancialReport(eventId: string): void {
-    this.reportService.getReportByEventId(eventId).subscribe(report => {
+  fetchFinancialReport(eventId: string, sellerId : string): void {
+    this.reportService.getReportByEventIdAndSellerId(eventId, sellerId).subscribe(report => {
       if (report) {
         const now = new Date();
   
@@ -126,9 +126,7 @@ export class FinancialReportComponent implements OnInit {
       }
     });
   }
-  
-  
-  
+      
 
   fetchEventDetails(): void {
     this.eventService.getEventActive().subscribe({

@@ -21,7 +21,8 @@ export class ReportService {
   }
 
   getReportByEventIdAndSellerId(eventId: string, sellerId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}?event_id=${eventId}&seller_id=${sellerId}`);
+    return this.http.get<any>(`${this.apiUrl}/event/${eventId}/seller/${sellerId}`);
   }
+  
 
 }
