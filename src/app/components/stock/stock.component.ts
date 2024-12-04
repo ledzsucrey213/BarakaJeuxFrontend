@@ -39,13 +39,7 @@ export class StockComponent implements OnInit, OnDestroy {
   totalStock: Stock = new Stock({
     _id: '',
     games_id: [],
-    seller_id: new User({
-      _id: '0',
-      firstname: 'Placeholder',
-      name: 'User',
-      email: 'placeholder@example.com',
-      role: 'seller',
-    }),
+    seller_id: "",
     games_sold: [],
   });
 

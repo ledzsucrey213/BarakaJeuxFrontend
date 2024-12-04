@@ -39,7 +39,7 @@ export class FinancialReportComponent implements OnInit {
   private timer: any; // Pour stocker l'identifiant du setInterval
   events: any[] = []; // Add a property to store events
 
-  financialReport: any;
+  financialReport: Report;
 
   games_in_stock: Number = 0;
 
@@ -123,6 +123,7 @@ export class FinancialReportComponent implements OnInit {
         });
   
         this.financialReport = report;
+        console.log('Financial report:', this.financialReport);
       }
     });
   }
