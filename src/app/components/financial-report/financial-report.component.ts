@@ -21,8 +21,7 @@ import jsPDF from 'jspdf';
 export class FinancialReportComponent implements OnInit {
   eventSelected: string = '';
   userSelected: string = '';
-  totalSold: string = '0.00 €';
-  totalDue: string = '0.00 €';
+
   totalFees: string = '0.00 €';
   totalCommission: string = '0.00 €';
   sellerId: User = new User({
@@ -39,7 +38,9 @@ export class FinancialReportComponent implements OnInit {
   private timer: any; // Pour stocker l'identifiant du setInterval
   events: any[] = []; // Add a property to store events
 
-  financialReport: Report;
+  total_earned: number = 0;
+  total_due: number = 0;
+  report_date: Date = new Date();
 
   games_in_stock: Number = 0;
 
@@ -122,8 +123,9 @@ export class FinancialReportComponent implements OnInit {
           }
         });
   
-        this.financialReport = report;
-        console.log('Financial report:', this.financialReport);
+        this.total_earned = report.total_earned;
+        this.total_due = report.total_due;
+        console.log('Financial report:', report);
       }
     });
   }
@@ -204,9 +206,9 @@ export class FinancialReportComponent implements OnInit {
     // Ajoutez du texte à votre document PDF
     // Add the attributes of the financial report to the PDF
     doc.text('Financial Report', 10, 10);
-    doc.text(`Total Earned: ${this.financialReport.total_earned || 0} €`, 10, 20);
-    doc.text(`Total Due: ${this.financialReport.total_due || 0} €`, 10, 30);
-    doc.text(`Report Date: ${this.financialReport.report_date ? new Date(this.financialReport.report_date).toLocaleDateString() : 'Not generated yet'}`, 10, 40);
+    doc.text(`Total Earned: ${this.total_earned || 0} €`, 10, 20);
+    doc.text(`Total Due: ${this.total_due || 0} €`, 10, 30);
+    doc.text(`Report Date: ${this.report_date ? new Date(this.report_date).toLocaleDateString() : 'Not generated yet'}`, 10, 40);
     doc.text(`Games in Stock: ${this.games_in_stock || 0}`, 10, 50);
 
     // Téléchargez le PDF avec le nom "Yanis_and_Jalil.pdf"

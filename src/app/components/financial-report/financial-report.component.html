@@ -22,20 +22,20 @@
     </div>
 
     <div class="container">
-      <div id="report-section" class="report-section" *ngIf="financialReport">
+      <div id="report-section" class="report-section">
         <label>Report:</label>
         <div class="report-details">
           <div class="report-item">
             <label>Total Earned:</label>
-            <span>{{ financialReport.total_earned || 0 }} €</span>
+            <span>{{ total_earned || 0 }} €</span>
           </div>
           <div class="report-item">
             <label>Total Due:</label>
-            <span>{{ financialReport.total_due || 0 }} €</span>
+            <span>{{ total_due || 0 }} €</span>
           </div>
           <div class="report-item">
             <label>Report Date:</label>
-            <span>{{ financialReport.report_date | date:'yyyy-MM-dd' }}</span>
+            <span>{{ report_date | date:'yyyy-MM-dd' }}</span>
           </div>
           <div class="report-item">
             <label>Games in stock: (current event only)</label>
