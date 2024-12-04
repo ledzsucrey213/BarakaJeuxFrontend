@@ -42,6 +42,10 @@ export class stockService {
     return this.http.put<Stock>(url, updatedStock);
   }
 
+  postStock(stock: Omit<Stock, '_id'>): Observable<Stock> {
+    return this.http.post<Stock>(`${this.apiUrl}/`, stock);
+  }
+
 
   addNewGameLabelToStock(sellerId: string): void {
     // Étape 2 : Récupérer tous les GameLabels associés au vendeur
