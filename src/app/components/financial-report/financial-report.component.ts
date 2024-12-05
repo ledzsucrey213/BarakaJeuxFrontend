@@ -84,7 +84,7 @@ export class FinancialReportComponent implements OnInit {
       this.events = events;
       if (this.events.length > 0) {
         this.events.sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime());
-        this.eventSelected = this.events[0]._id;
+        this.eventSelected = this.events[this.events.length - 1]._id;
         this.fetchFinancialReport(this.eventSelected, this.sellerId._id);
       }
     });
@@ -188,13 +188,40 @@ export class FinancialReportComponent implements OnInit {
     });
   }
 
-  navigateToStocks(): void {
-    console.log('Navigating to stocks...');
-  }
-
   takeMoney(): void {
-    console.log('Taking your money...');
+    if (this.eventSelected && this.sellerId._id) {
+      // Fetch the current report for the selected event and seller
+      this.reportService.getReportByEventIdAndSellerId(this.eventSelected, this.sellerId._id).subscribe(report => {
+        if (report) {
+          // Set total_due to 0
+          const updatedReport = { ...report, total_due: 0 };
+  
+          // Update the report using the ReportService
+          this.reportService.updateReport(report._id, updatedReport).subscribe(
+            (updated) => {
+              console.log('Report updated successfully:', updated);
+              this.total_due = updated.total_due; // Update the local value
+              alert('Payment successfully recorded. Total due is now 0.');
+            },
+            (error) => {
+              console.error('Error updating the report:', error);
+              alert('An error occurred while processing the payment. Please try again.');
+            }
+          );
+        } else {
+          console.warn('No report found for the selected event and seller.');
+          alert('No report found for the selected event and seller.');
+        }
+      }, error => {
+        console.error('Error fetching report:', error);
+        alert('An error occurred while fetching the report. Please try again.');
+      });
+    } else {
+      console.warn('Event or seller ID is missing.');
+      alert('Please select an event and ensure the seller information is loaded.');
+    }
   }
+  
   getBackGames(sellerId : string): void {
     // Implement the logic for "get back my games" action
     this.router.navigate([`/stock/${sellerId}`]);

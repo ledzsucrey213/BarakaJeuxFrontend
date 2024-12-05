@@ -27,5 +27,9 @@ export class ReportService {
     return this.http.get<any>(`${this.apiUrl}/event/${eventId}/seller/${sellerId}`);
   }
   
+  updateReport(reportId: string, updatedReport: Partial<Report>): Observable<Report> {
+    const url = `${this.apiUrl}/${reportId}`; // URL de la ressource à mettre à jour
+    return this.http.put<Report>(url, updatedReport);
+  }
 
 }
