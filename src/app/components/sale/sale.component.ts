@@ -18,6 +18,9 @@ import { User } from '../../models/user/user';
 import { UserService } from '../../services/user/user.service';
 import { Invoice } from '../../models/invoice/invoice';
 import { InvoiceService } from '../../services/invoice/invoice.service';
+import { Report } from '../../models/report/report';
+import { ReportService } from '../../services/report/report.service';
+import { Stock } from '../../models/stock/stock';
 
 @Component({
   selector: 'app-sale',
@@ -49,6 +52,7 @@ export class SaleComponent {
   selectedClient: User | null = null;
   newClientData: Omit<User, '_id'> = { firstname: '', name: '', address: '', email: '', role : 'buyer' };
   isNewClient: boolean = false;
+  reportService: any;
 
 
   constructor(
@@ -259,11 +263,12 @@ export class SaleComponent {
   }
   
   pay(): void {
+    console.log('coucou');
     const newSale: Omit<Sale, '_id'> = {
       total_price: this.calculateTotal(),
       games_id: this.cartGames,
       sale_date: new Date(),
-      total_commission: this.cartGames.length * this.eventCommission,
+      total_commission: this.calculateTotal() * this.eventCommission,
       paid_with: this.choosedPayment,
     };
 
@@ -299,8 +304,93 @@ export class SaleComponent {
       error: (error) => console.error('Erreur lors de l\'ajout de la vente:', error),
     });
 
-    // Vider le panier
+    this.cartGames.forEach(gameLabel => {
+      const sellerId = gameLabel.seller_id;
+      const eventId = gameLabel.event_id;
+      const earned = gameLabel.price * (1 - this.eventCommission/100);
+  
+      // Vérifier si sellerId et eventId sont valides
+      if (!sellerId || !eventId || !earned) {
+        console.warn(`GameLabel avec ID ${gameLabel._id} est invalide ou incomplet.`);
+        return;
+      }
+  
+      // Récupérer le rapport correspondant à l'événement et au vendeur
+      this.reportService.getReportByEventIdAndSellerId(eventId, sellerId).subscribe({
+        next: (report: Report) => {
+          if (report) {
+            // Mettre à jour les gains et réduire le montant dû
+            const updatedReport: Partial<Report> = {
+              total_earned: report.total_earned + earned,
+              total_due: report.total_due + earned, // Empêcher total_due d'être négatif
+            };
+  
+            // Mettre à jour le rapport via le service
+            this.reportService.updateReport(report._id, updatedReport).subscribe({
+              next: (updated: any) => {
+                console.log(`Report mis à jour avec succès :`, updated);
+              },
+              error: (error: any) => {
+                console.error(`Erreur lors de la mise à jour du report avec ID ${report._id}:`, error);
+              },
+            });
+          } else {
+            console.warn(`Aucun rapport trouvé pour l'événement ${eventId} et le vendeur ${sellerId}.`);
+          }
+        },
+        error: (error: any) => {
+          console.error(
+            `Erreur lors de la récupération du rapport pour l'événement ${eventId} et le vendeur ${sellerId}:`,
+            error
+          );
+        },
+      });
+  
+      // Mettre à jour les états du GameLabel
+      const updatedGameLabel = {
+        is_Sold: true,
+        is_On_Sale: false,
+      };
+  
+      this.gameLabelService.updateGameLabel(gameLabel._id, updatedGameLabel).subscribe({
+        next: updatedLabel => {
+          console.log(`GameLabel mis à jour avec succès :`, updatedLabel);
+        },
+        error: error => {
+          console.error(`Erreur lors de la mise à jour du GameLabel avec ID ${gameLabel._id}:`, error);
+        },
+      });
+    });
+  
+    this.cartGames.forEach(gameLabel => {
+      const sellerId = gameLabel.seller_id;
+  
+      if (!sellerId) {
+        console.warn(`GameLabel avec ID ${gameLabel._id} n'a pas de seller_id associé.`);
+        return;
+      }
+  
+      // Récupérer le stock associé au vendeur
+      this.stockService.getStocksBySellerId(sellerId).subscribe({
+        next: (stock: Stock) => {
+          if (!stock || !stock._id) {
+            console.error(`Aucun stock trouvé pour le vendeur avec ID ${sellerId}.`);
+            return;
+          }
+  
+          console.log(`Stock trouvé pour le vendeur ${sellerId} :`, stock);
+  
+          // Utiliser la fonction sellGame pour mettre à jour le stock
+          this.stockService.sellGame(sellerId, [gameLabel]);
+        },
+        error: (error) => {
+          console.error(`Erreur lors de la récupération du stock pour le vendeur ${sellerId} :`, error);
+        },
+      });
+    });
+    // Optionnel : vider le panier après la mise à jour
     this.cartGames = [];
+    console.log('Mise à jour terminée, le panier est vidé.');
   }
 
   // Méthode pour créer une facture
