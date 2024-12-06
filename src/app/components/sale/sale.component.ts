@@ -200,6 +200,7 @@ export class SaleComponent {
 
   addToCart(game: GameLabel): void {
     this.cartGames.push(game);
+    console.log('Jeux ajoutés au panier:', this.cartGames);
   }
 
   // Méthode pour ouvrir la fenêtre modale
