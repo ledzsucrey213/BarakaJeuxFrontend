@@ -1,0 +1,128 @@
+.container {
+    font-family: Arial, sans-serif;
+    margin: 20px auto;
+    max-width: 900px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid #ccc;
+  
+      .logo {
+        width: 150px;
+      }
+  
+      .event-info {
+        text-align: right;
+  
+        h1 {
+          margin: 0;
+          font-size: 1.5em;
+        }
+  
+        span {
+          color: gray;
+          font-size: 0.9em;
+        }
+      }
+    }
+  
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      margin: 16px 0;
+  
+      div {
+        display: flex;
+        flex-direction: column;
+  
+        label {
+          font-size: 0.9em;
+          margin-bottom: 4px;
+          color: #666;
+        }
+  
+        input {
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          padding: 8px;
+          font-size: 1em;
+        }
+      }
+    }
+  
+    .invoice-section {
+      margin-top: 20px;
+  
+      h2 {
+        margin-bottom: 10px;
+      }
+  
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+  
+        thead {
+          tr {
+            background-color: #f4f4f4;
+  
+            th {
+              padding: 8px;
+              border: 1px solid #ccc;
+            }
+          }
+        }
+  
+        tbody {
+          tr {
+            &:nth-child(even) {
+              background-color: #f9f9f9;
+            }
+  
+            &:hover {
+              background-color: #f1f1f1;
+            }
+  
+            td {
+              padding: 8px;
+              border: 1px solid #ccc;
+  
+              button {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 4px;
+                cursor: pointer;
+  
+                &:hover {
+                  background-color: #0056b3;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  
+    footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-top: 1px solid #ccc;
+      margin-top: 20px;
+  
+      span {
+        font-size: 0.9em;
+        color: gray;
+      }
+    }
+  }
+  

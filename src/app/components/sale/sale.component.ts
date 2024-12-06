@@ -245,6 +245,7 @@ export class SaleComponent {
   selectClient(client: User): void {
     this.selectedClient = client;
     this.isNewClient = false;
+    console.log(`${this.selectedClient.name}`)
   }
 
   // Méthode pour créer un nouveau client
@@ -256,6 +257,7 @@ export class SaleComponent {
   // Méthode pour valider la sélection ou la création du client
   confirmClient(): void {
     this.showInvoiceModal = false;
+    console.log(`${this.selectedClient}`)
   }
   
   pay(): void {

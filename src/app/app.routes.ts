@@ -11,6 +11,7 @@ import { StockComponent } from './components/stock/stock.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { AdvancedSearchComponent } from './components/advanced-search/advanced-search.component';
 import { FinancialReportComponent } from './components/financial-report/financial-report.component';
+import { InvoiceComponent } from './components/invoice/invoice.component';
 
 export const routes: Route[] = [
   {path: '', component: HomeComponent},
@@ -24,5 +25,6 @@ export const routes: Route[] = [
   {path : 'advancedsearch', component : AdvancedSearchComponent},
   {path : 'financialreport/:id', component : FinancialReportComponent},
   {path : 'admin', component : AdminComponent},
+  {path : 'invoice/:id', component : InvoiceComponent}
 
 ];

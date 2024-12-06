@@ -98,7 +98,8 @@
           />
         </div>
         <ul>
-          <li *ngFor="let client of filteredClients" (click)="selectClient(client)">
+          <li *ngFor="let client of filteredClients" (click)="selectClient(client)"
+          [ngClass]="{ 'selected': selectedClient?._id === client._id }">
             {{ client.firstname }} {{ client.name }}
           </li>
         </ul>
