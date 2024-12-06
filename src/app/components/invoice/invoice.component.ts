@@ -24,6 +24,7 @@ export class InvoiceComponent implements OnInit {
   buyerId : string = '';
   selectedUser: string = ''; // Sélection de l'utilisateur
   invoices : Invoice[] = [];
+  salesIds : { [key : string] : string} = {};
   salesDates: { [key: string]: Date } = {};
   salesPrices: { [key: string]: number } = {};
   salesGames: { [key : string]: GameLabel[] } = {};
@@ -47,13 +48,14 @@ export class InvoiceComponent implements OnInit {
 
   // Récupère les utilisateurs via le UserService
   fetchInvoices(): void {
-    this.invoiceService.getInvoices().subscribe({
-        next: (data: Invoice[]) => {
+    this.invoiceService.getInvoicesByClientId(this.buyerId).subscribe({
+        next: (data : Invoice[]) => {
             this.invoices = data;
 
             // Parcourez chaque facture pour récupérer les informations de vente associées
             this.invoices.forEach((invoice) => {
                 if (invoice.sale_id) {
+                    console.log(`${invoice.sale_id}`);
                     this.fetchSaleInfos(invoice.sale_id);
                 } else {
                     console.warn(`Aucune sale_id trouvée pour la facture avec l'ID : ${invoice._id}`);
