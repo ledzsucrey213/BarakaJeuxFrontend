@@ -255,7 +255,8 @@ export class DepositComponent implements OnInit, OnDestroy {
     }, 0);
   
     // Appliquer la remise
-    const discountedTotal = totalBaseFee - (totalBaseFee * discount) / 100;
+    const discountedTotal = parseFloat(((totalBaseFee - (totalBaseFee * discount) / 100)).toFixed(2));
+
   
     return discountedTotal;
   }

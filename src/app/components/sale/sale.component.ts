@@ -52,7 +52,6 @@ export class SaleComponent {
   selectedClient: User | null = null;
   newClientData: Omit<User, '_id'> = { firstname: '', name: '', address: '', email: '', role : 'buyer' };
   isNewClient: boolean = false;
-  reportService: any;
 
 
   constructor(
@@ -64,7 +63,8 @@ export class SaleComponent {
     private stockService : stockService,
     private saleService : SaleService,
     private userService : UserService,
-    private invoiceService : InvoiceService
+    private invoiceService : InvoiceService,
+    private reportService : ReportService
   ) {}
 
 
@@ -270,7 +270,7 @@ export class SaleComponent {
       total_price: this.calculateTotal(),
       games_id: this.cartGames,
       sale_date: new Date(),
-      total_commission: this.calculateTotal() * this.eventCommission,
+      total_commission: this.calculateTotal() * this.eventCommission/100,
       paid_with: this.choosedPayment,
     };
 
@@ -309,8 +309,8 @@ export class SaleComponent {
     this.cartGames.forEach(gameLabel => {
       const sellerId = gameLabel.seller_id;
       const eventId = gameLabel.event_id;
-      const earned = gameLabel.price * (1 - this.eventCommission/100);
-  
+      const earned = parseFloat((gameLabel.price * (1 - this.eventCommission / 100)).toFixed(2));
+
       // Vérifier si sellerId et eventId sont valides
       if (!sellerId || !eventId || !earned) {
         console.warn(`GameLabel avec ID ${gameLabel._id} est invalide ou incomplet.`);
