@@ -199,8 +199,12 @@ export class SaleComponent {
   }
   
 
-  addToCart(game: GameLabel): void {
-    this.cartGames.push(game);
+  addToCart(gameLabel: GameLabel): void {
+    this.cartGames.push(gameLabel);
+    // Supprimer le jeu de la liste complète
+    this.allGameLabels = this.allGameLabels.filter(game => game._id !== gameLabel._id);
+    // Supprimer le jeu de la liste filtrée
+    this.filteredGames = this.filteredGames.filter(game => game._id !== gameLabel._id);
   }
 
   // Méthode pour ouvrir la fenêtre modale
