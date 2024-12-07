@@ -35,8 +35,6 @@ export class SaleComponent {
   eventId: string = '';
   eventName: string = '';
   eventCommission : number = 0;
-  remainingTime: string = '';
-  private timer: any; // Pour stocker l'identifiant du setInterval
   cartGames : GameLabel[] = []
   gamesNames: { [key: string]: string } = {};
   filteredGames: GameLabel[] = []; // Jeux filtrés pour l'affichage
@@ -74,10 +72,7 @@ export class SaleComponent {
   }
 
   ngOnDestroy(): void {
-    // Nettoyer le timer lorsque le composant est détruit
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
+
   }
 
   @HostListener('document:click', ['$event'])
@@ -134,12 +129,6 @@ export class SaleComponent {
         this.eventId = session._id;
         this.eventCommission = session.commission;
         console.log(`Fetching game for event_id ${session._id}`);
-        this.calculateRemainingTime(new Date(session.end)); // Calcul initial
-
-        // Démarrer le timer uniquement sur le client et pas côté serveur
-        if (typeof window !== 'undefined') {
-          this.startTimer(new Date(session.end)); 
-        }
       },
       error: (error) => {
         console.error('Erreur lors de la récupération de la session :', error);
@@ -161,37 +150,6 @@ export class SaleComponent {
   }
 
 
-  // Méthode pour calculer le temps restant
-  calculateRemainingTime(endDate: Date): void {
-    const now = new Date();
-    const difference = endDate.getTime() - now.getTime();
-
-    if (difference <= 0) {
-      this.remainingTime = 'Session terminée'; // Si la session est terminée
-      if (this.timer) {
-        clearInterval(this.timer); // Arrêter le timer
-      }
-      return;
-    }
-
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-
-    this.remainingTime = `${days} jours, ${hours} heures, ${minutes} minutes`;
-  }
-
-  // Méthode pour démarrer le timer
-  startTimer(endDate: Date): void {
-    if (this.timer) {
-      clearInterval(this.timer); // Assurez-vous que le timer précédent est nettoyé
-    }
-
-    // Mettre à jour chaque minute (pas nécessaire côté SSR)
-    this.timer = setInterval(() => {
-      this.calculateRemainingTime(endDate);
-    }, 60000); // Toutes les 60 secondes
-  }
 
   calculateTotal(): number {
     // On utilise reduce pour additionner les prix des jeux
