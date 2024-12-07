@@ -20,9 +20,9 @@
         <tbody>
           <tr *ngFor="let invoice of invoices">
             <td>{{ this.salesDates[invoice._id] }}</td>
-            <td>{{ this.salesPrices[invoice._id] }}</td>
+            <td>{{ this.salesPrices[invoice._id] }}€</td>
             <td>
-              <button (click)="generatePDF(invoice._id, invoice.sale_id)">{{ invoice._id }}</button>
+              <button (click)="generatePDF(invoice._id, invoice.sale_id._id)">{{ invoice._id }}</button>
             </td>
           </tr>
         </tbody>
