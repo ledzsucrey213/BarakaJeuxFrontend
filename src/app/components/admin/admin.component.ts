@@ -20,8 +20,6 @@ import { EventService } from '../../services/event/event.service';
 export class AdminComponent {
   eventId: string = '';
   eventName: string = '';
-  remainingTime: string = '';
-  private timer: any; // Pour stocker l'identifiant du setInterval
   users: User[] = [];
   events: Event[] = [];
   showAddEventForm: boolean = false; // Variable pour afficher/masquer le formulaire
@@ -57,10 +55,6 @@ export class AdminComponent {
   }
 
   ngOnDestroy(): void {
-    // Nettoyer le timer lorsque le composant est détruit
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
   }
      
 
@@ -71,12 +65,6 @@ export class AdminComponent {
         this.eventName = session.name;  // Stocker le nom de la session
         this.eventId = session._id;
         console.log(`Fetching game for event_id ${session._id}`);
-        this.calculateRemainingTime(new Date(session.end)); // Calcul initial
-
-        // Démarrer le timer uniquement sur le client et pas côté serveur
-        if (typeof window !== 'undefined') {
-          this.startTimer(new Date(session.end)); 
-        }
       },
       error: (error) => {
         console.error('Erreur lors de la récupération de la session :', error);
@@ -85,37 +73,6 @@ export class AdminComponent {
   }
 
 
-  // Méthode pour calculer le temps restant
-  calculateRemainingTime(endDate: Date): void {
-    const now = new Date();
-    const difference = endDate.getTime() - now.getTime();
-
-    if (difference <= 0) {
-      this.remainingTime = 'Session terminée'; // Si la session est terminée
-      if (this.timer) {
-        clearInterval(this.timer); // Arrêter le timer
-      }
-      return;
-    }
-
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-
-    this.remainingTime = `${days} jours, ${hours} heures, ${minutes} minutes`;
-  }
-
-  // Méthode pour démarrer le timer
-  startTimer(endDate: Date): void {
-    if (this.timer) {
-      clearInterval(this.timer); // Assurez-vous que le timer précédent est nettoyé
-    }
-
-    // Mettre à jour chaque minute (pas nécessaire côté SSR)
-    this.timer = setInterval(() => {
-      this.calculateRemainingTime(endDate);
-    }, 60000); // Toutes les 60 secondes
-  }
 
 // Récupère les utilisateurs via le UserService
 fetchUsers(): void {

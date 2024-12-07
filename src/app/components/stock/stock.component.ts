@@ -34,8 +34,6 @@ export class StockComponent implements OnInit, OnDestroy {
   
   eventId: string = '';
   eventName: string = '';  // Variable pour stocker le nom du jeu
-  remainingTime: string = '';
-  private timer: any; // Pour stocker l'identifiant du setInterval
   totalStock: Stock = new Stock({
     _id: '',
     games_id: [],
@@ -67,9 +65,6 @@ export class StockComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // Nettoyer le timer lorsque le composant est détruit
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
   }
 
   fetchEventDetails(): void {
@@ -78,11 +73,6 @@ export class StockComponent implements OnInit, OnDestroy {
         this.eventName = session.name;  // Stocker le nom de la session
         this.eventId = session._id;
         console.log(`Fetching game for event_id ${session._id}`);
-        this.calculateRemainingTime(new Date(session.end)); // Calcul initial
-
-        if (typeof window !== 'undefined') {
-          this.startTimer(new Date(session.end)); 
-        }
       },
       error: (error) => {
         console.error('Erreur lors de la récupération de la session :', error);
@@ -102,34 +92,6 @@ export class StockComponent implements OnInit, OnDestroy {
     });
   }
 
-  calculateRemainingTime(endDate: Date): void {
-    const now = new Date();
-    const difference = endDate.getTime() - now.getTime();
-
-    if (difference <= 0) {
-      this.remainingTime = 'Session terminée';
-      if (this.timer) {
-        clearInterval(this.timer);
-      }
-      return;
-    }
-
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-
-    this.remainingTime = `${days} jours, ${hours} heures, ${minutes} minutes`;
-  }
-
-  startTimer(endDate: Date): void {
-    if (this.timer) {
-      clearInterval(this.timer); 
-    }
-
-    this.timer = setInterval(() => {
-      this.calculateRemainingTime(endDate);
-    }, 60000); 
-  }
 
   fetchGamesInStock(sellerId: string): void {
     this.stockService.getStocksBySellerId(sellerId).subscribe({

@@ -23,8 +23,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
   eventId: string = '';
   eventName: string = '';  // Variable pour stocker le nom du jeu
-  remainingTime: string = '';
-  private timer: any; // Pour stocker l'identifiant du setInterval
 
   minPrice: number = 0;
   maxPrice: number = 1000;
@@ -52,10 +50,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Nettoyer le timer lorsque le composant est détruit
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
   }
   goToGameComponent(gameId: string): void {
     // Use the Router service to navigate to the game details page
@@ -76,12 +70,6 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.eventName = session.name;
         this.eventId = session._id;
         console.log(`Fetching game for event_id ${session._id}`);
-        this.calculateRemainingTime(new Date(session.end)); // Calcul initial
-
-        // Démarrer le timer uniquement sur le client et pas côté serveur
-        if (typeof window !== 'undefined') {
-          this.startTimer(new Date(session.end));
-        }
       },
       error: (error) => {
         console.error('Erreur lors de la récupération de la session :', error);
@@ -108,34 +96,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     });
   }
 
-  calculateRemainingTime(endDate: Date): void {
-    const now = new Date();
-    const difference = endDate.getTime() - now.getTime();
-
-    if (difference <= 0) {
-      this.remainingTime = 'Session terminée';
-      if (this.timer) {
-        clearInterval(this.timer);
-      }
-      return;
-    }
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-
-    this.remainingTime = `${days} jours, ${hours} heures, ${minutes} minutes`;
-  }
-
-  startTimer(endDate: Date): void {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
-
-    this.timer = setInterval(() => {
-      this.calculateRemainingTime(endDate);
-    }, 60000); // Toutes les 60 secondes
-  }
-
+  
   fetchGameLabels(): void {
     this.gameLabelService.getGameLabels().subscribe({
       next: (labels: GameLabel[]) => {

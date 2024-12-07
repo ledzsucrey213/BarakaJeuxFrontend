@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterModule, RouterOutlet, RouterLink } from '@angular/router';
-import { Router } from '@angular/router';
+import { RouterModule, RouterOutlet, RouterLink, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { EventService } from './services/event/event.service';
 import { Event } from './models/event/event';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,19 @@ export class AppComponent implements OnInit {
   remainingTime: string = '';
   private timer: any; // Pour stocker l'identifiant du setInterval
   eventName: string = '';
+  currentComponentName: string = '';
 
-  constructor(private router : Router, private eventService : EventService) {}
+  constructor(private router : Router, private eventService : EventService, private route : ActivatedRoute) {}
 
   ngOnInit(): void {
     this.fetchEventDetails();
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        // Obtenir la route active et son nom
+        const activeRoute = this.router.routerState.root;
+        this.currentComponentName = this.getActiveComponentName(activeRoute);
+      });
   }
 
   ngOnDestroy(): void {
@@ -83,5 +92,13 @@ export class AppComponent implements OnInit {
 
   goToAdminComponent() {
     this.router.navigate(['/admin']); // Redirige vers /search-seller
-  } 
+  }
+
+  // Récupérer récursivement le nom du composant actif
+  private getActiveComponentName(route: ActivatedRoute): string {
+    if (route.firstChild) {
+      return this.getActiveComponentName(route.firstChild);
+    }
+    return route.snapshot.data['title'] || 'Unknown Component'; // Utilisez des données définies dans les routes
+  }
 }

@@ -14,17 +14,17 @@ import { FinancialReportComponent } from './components/financial-report/financia
 import { InvoiceComponent } from './components/invoice/invoice.component';
 
 export const routes: Route[] = [
-  {path: '', component: HomeComponent},
-  {path: 'event', component: EventComponent},
-  {path : 'search-seller', component: SearchSellerComponent},
-  {path : 'sale', component : SaleComponent},
-  {path : 'deposit/:id', component : DepositComponent},
-  {path : 'new-seller', component : NewSellerComponent},
-  {path : 'game/:id', component : GameComponent},
-  {path : 'stock/:id', component : StockComponent},
-  {path : 'advancedsearch', component : AdvancedSearchComponent},
-  {path : 'financialreport/:id', component : FinancialReportComponent},
-  {path : 'admin', component : AdminComponent},
-  {path : 'invoice/:id', component : InvoiceComponent}
+  {path: '', component: HomeComponent, data: { title: 'Accueil' }},
+  {path: 'event', component: EventComponent, data: { title: 'Evènement' }},
+  {path : 'search-seller', component: SearchSellerComponent, data: { title: 'Rechercher un vendeur' }},
+  {path : 'sale', component : SaleComponent, data: { title: 'Vente' }},
+  {path : 'deposit/:id', component : DepositComponent, data: { title: 'Dépôt' }},
+  {path : 'new-seller', component : NewSellerComponent, data: { title: 'Nouveau vendeur' }},
+  {path : 'game/:id', component : GameComponent, data: { title: 'Jeux' }},
+  {path : 'stock/:id', component : StockComponent, data: { title: 'Stock' }},
+  {path : 'advancedsearch', component : AdvancedSearchComponent, data: { title: 'Recherche avancée' }},
+  {path : 'financialreport/:id', component : FinancialReportComponent, data: { title: 'Bilan Financier' }},
+  {path : 'admin', component : AdminComponent, data: { title: 'Admin' }},
+  {path : 'invoice/:id', component : InvoiceComponent, data: { title: 'Factures' }}
 
 ];
