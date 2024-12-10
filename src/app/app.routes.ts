@@ -12,6 +12,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { AdvancedSearchComponent } from './components/advanced-search/advanced-search.component';
 import { FinancialReportComponent } from './components/financial-report/financial-report.component';
 import { InvoiceComponent } from './components/invoice/invoice.component';
+import { LoginComponent } from './components/login/login.component';
 
 export const routes: Route[] = [
   {path: '', component: HomeComponent, data: { title: 'Accueil' }},
@@ -25,6 +26,7 @@ export const routes: Route[] = [
   {path : 'advancedsearch', component : AdvancedSearchComponent, data: { title: 'Recherche avancée' }},
   {path : 'financialreport/:id', component : FinancialReportComponent, data: { title: 'Bilan Financier' }},
   {path : 'admin', component : AdminComponent, data: { title: 'Admin' }},
-  {path : 'invoice/:id', component : InvoiceComponent, data: { title: 'Factures' }}
+  {path : 'invoice/:id', component : InvoiceComponent, data: { title: 'Factures' }},
+  {path : 'login', component : LoginComponent, data: { title: 'Connexion' }}
 
 ];

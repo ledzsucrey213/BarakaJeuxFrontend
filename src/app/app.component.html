@@ -15,6 +15,48 @@
 
   <!-- Footer Links -->
   <div class="footer">
-    <button class="footer-link left" (click)="goToAdminComponent()">Admin</button>
+    <button class="footer-link left" (click)="navigateTo('admin')">Admin</button>
+    <!-- Manage Button with Dropdown -->
+    <div class="dropdown" [class.open]="isDropdownOpen">
+      <button class="footer-link right" (click)="toggleDropdown()">Manage</button>
+      <div class="dropdown-menu" *ngIf="isDropdownOpen">
+        <button class="dropdown-item" (click)="openUserModal('invoice')">Invoice</button>
+        <button class="dropdown-item" (click)="openUserModal('report')">Report</button>
+        <button class="dropdown-item" (click)="openUserModal('stock')">Stock</button>
+      </div>
+    </div>
+    </div>
+
+    <!-- User Modal -->
+    <div class="user-modal" *ngIf="showUserModal">
+    <div class="modal-content">
+      <h2>Rechercher un utilisateur</h2>
+      <div class="search-type-buttons">
+        <button 
+          (click)="setSearchType('seller')" 
+          [ngClass]="{
+            'button-selected': selectedSearchType === 'seller',
+            'button-unselected': selectedSearchType !== 'seller'}">
+          Rechercher un Seller
+        </button>
+      
+        <button 
+          (click)="setSearchType('buyer')" 
+          [ngClass]="{
+            'button-selected': selectedSearchType === 'buyer',
+            'button-unselected': selectedSearchType !== 'buyer'}">
+          Rechercher un Client
+        </button>
+      </div>
+
+      <input type="text" [(ngModel)]="searchClient" (input)="searchClients()" placeholder="Rechercher par nom ou prénom" />
+      <ul>
+        <li *ngFor="let client of filteredClients" (click)="selectUser(client)">
+          {{ client.firstname }} {{ client.name }} - {{ client.role }}
+        </li>
+      </ul>
+
+      <button (click)="closeModal()">Annuler</button>
+    </div>
   </div>
 </div>

@@ -75,5 +75,149 @@ $button-text-color: white;
         text-decoration: none;
       }
     }
+
+    .dropdown {
+      position: relative;
+
+      &.open .dropdown-menu {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        bottom: 50px;
+        right: 0;
+        background-color: $background-color;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        display: none;
+
+        .dropdown-item {
+          padding: 10px 20px;
+          font-size: 14px;
+          font-weight: bold;
+          color: $text-color;
+          background-color: $hover-bg-color;
+          border: none;
+          cursor: pointer;
+          text-align: left;
+
+          &:hover {
+            background-color: $primary-color;
+            color: $button-text-color;
+          }
+        }
+      }
   }
+  }
+
+  .user-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+  
+      h2 {
+        margin-bottom: 20px;
+      }
+  
+      .buttons {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+  
+        button {
+          padding: 10px 20px;
+          background-color: $primary-color;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+  
+          &:hover {
+            background-color: $secondary-color;
+          }
+        }
+      }
+  
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid $border-color;
+        border-radius: 5px;
+        margin-left: -10px; // Décale la barre légèrement vers la gauche
+      }
+  
+      ul {
+        list-style: none;
+        padding: 0;
+  
+        li {
+          padding: 10px;
+          cursor: pointer;
+          &:hover {
+            background-color: $hover-bg-color;
+          }
+        }
+      }
+  
+      button {
+        margin-top: 20px;
+      }
+
+      .button-selected {
+        background-color: #003391; // Couleur un peu plus sombre pour indiquer la sélection
+        color: white; // Maintenir le contraste
+        font-weight: bold; // Accentuer visuellement le bouton actif
+        border: 2px solid #002a70; // Optionnel : ajouter un contour pour différencier
+        font-size: 14px;
+        padding: 8px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+      }
+
+      .button-unselected {
+        background-color: $hover-bg-color; // Couleur un peu plus sombre pour indiquer la sélection
+        color: $text-color; // Maintenir le contraste
+        font-weight: bold; // Accentuer visuellement le bouton actif
+        border: 2px solid #002a70; // Optionnel : ajouter un contour pour différencier
+        font-size: 14px;
+        padding: 8px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+      }
+
+      
+      button {
+        margin: 5px; // Un espacement pour une mise en page claire
+      }
+      
+    }
+  }
+  
 }
