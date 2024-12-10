@@ -1,3 +1,12 @@
+// Variables pour les couleurs principales
+$primary-color: #0044b2;
+$secondary-color: #00308f;
+$border-color: #0044b2;
+$background-color: #f9f9f9;
+$text-color: #333;
+$hover-bg-color: #f0f0f0;
+$button-text-color: white;
+
 .container {
   display: flex;
   flex-direction: column;
@@ -6,6 +15,29 @@
   height: 100vh;
   text-align: center;
   position: relative;
+
+  // Style pour la navigation supérieure
+  .top-nav {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    background-color: $primary-color;
+    padding: 10px 0;
+
+    .nav-button {
+      color: $button-text-color;
+      font-weight: bold;
+      font-size: 14px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 
   /* Banner section */
   .banner {

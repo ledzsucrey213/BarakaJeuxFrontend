@@ -35,8 +35,6 @@ export class SaleComponent {
   eventId: string = '';
   eventName: string = '';
   eventCommission : number = 0;
-  remainingTime: string = '';
-  private timer: any; // Pour stocker l'identifiant du setInterval
   cartGames : GameLabel[] = []
   gamesNames: { [key: string]: string } = {};
   filteredGames: GameLabel[] = []; // Jeux filtrés pour l'affichage
@@ -74,10 +72,7 @@ export class SaleComponent {
   }
 
   ngOnDestroy(): void {
-    // Nettoyer le timer lorsque le composant est détruit
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
+
   }
 
   @HostListener('document:click', ['$event'])
@@ -134,12 +129,6 @@ export class SaleComponent {
         this.eventId = session._id;
         this.eventCommission = session.commission;
         console.log(`Fetching game for event_id ${session._id}`);
-        this.calculateRemainingTime(new Date(session.end)); // Calcul initial
-
-        // Démarrer le timer uniquement sur le client et pas côté serveur
-        if (typeof window !== 'undefined') {
-          this.startTimer(new Date(session.end)); 
-        }
       },
       error: (error) => {
         console.error('Erreur lors de la récupération de la session :', error);
@@ -161,37 +150,6 @@ export class SaleComponent {
   }
 
 
-  // Méthode pour calculer le temps restant
-  calculateRemainingTime(endDate: Date): void {
-    const now = new Date();
-    const difference = endDate.getTime() - now.getTime();
-
-    if (difference <= 0) {
-      this.remainingTime = 'Session terminée'; // Si la session est terminée
-      if (this.timer) {
-        clearInterval(this.timer); // Arrêter le timer
-      }
-      return;
-    }
-
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-
-    this.remainingTime = `${days} jours, ${hours} heures, ${minutes} minutes`;
-  }
-
-  // Méthode pour démarrer le timer
-  startTimer(endDate: Date): void {
-    if (this.timer) {
-      clearInterval(this.timer); // Assurez-vous que le timer précédent est nettoyé
-    }
-
-    // Mettre à jour chaque minute (pas nécessaire côté SSR)
-    this.timer = setInterval(() => {
-      this.calculateRemainingTime(endDate);
-    }, 60000); // Toutes les 60 secondes
-  }
 
   calculateTotal(): number {
     // On utilise reduce pour additionner les prix des jeux
@@ -201,7 +159,6 @@ export class SaleComponent {
 
   addToCart(game: GameLabel): void {
     this.cartGames.push(game);
-    console.log('Jeux ajoutés au panier:', this.cartGames);
   }
 
   // Méthode pour ouvrir la fenêtre modale
@@ -268,79 +225,69 @@ export class SaleComponent {
   
   pay(): void {
     console.log('coucou');
-    
     const newSale: Omit<Sale, '_id'> = {
       total_price: this.calculateTotal(),
       games_id: this.cartGames,
       sale_date: new Date(),
-      total_commission: this.calculateTotal() * this.eventCommission / 100,
+      total_commission: this.calculateTotal() * this.eventCommission/100,
       paid_with: this.choosedPayment,
     };
-  
+
     // Créer la vente
     this.saleService.postSale(newSale).subscribe({
       next: (sale) => {
         console.log('Vente ajoutée:', sale);
-  
-        // Attendre la fin de la création pour récupérer toutes les ventes et obtenir l'ID de la vente nouvellement créée
-        this.saleService.getSales().subscribe({
-          next: (sales) => {
-            const saleId = sales.find((s: Sale) => 
-              s.total_price === newSale.total_price && 
-              s.sale_date === newSale.sale_date)?.['_id'];
-  
-            if (!saleId) {
-              console.error('Impossible de trouver la vente créée.');
-              return;
-            }
-  
-            console.log('ID de la vente récupérée :', saleId);
-  
-            // Déterminer l'utilisateur et créer la facture
-            if (this.selectedClient) {
-              // Cas 1 : Utilisateur existant
-              console.log('Utilisateur existant');
-              this.createInvoice(saleId, this.selectedClient._id); // Utiliser l'ID du client existant
-            } else if (this.isNewClient) {
-              // Cas 2 : Nouveau client
-              this.userService.postUser(this.newClientData).subscribe({
-                next: (createdUser) => {
-                  console.log('Utilisateur créé:', createdUser);
-  
-                  // Utiliser l'ID de l'utilisateur créé pour la facture
-                  this.createInvoice(saleId, createdUser._id);
+
+        if (this.selectedClient) {
+          // Cas 1 : Client existant
+          console.log('client existant');
+          this.createInvoice(sale, this.selectedClient._id);
+        } else if (this.isNewClient) {
+          // Cas 2 : Nouveau client
+          this.userService.postUser(this.newClientData).subscribe({
+            next: (createdUser) => {
+              console.log('Utilisateur créé:', createdUser);
+
+              // Récupérer l'utilisateur créé pour obtenir son ID
+              this.userService.getAllUsers().subscribe({
+                next: (users) => {
+                  const newUser = users.find((user) => user.email === this.newClientData.email);
+                  if (newUser) {
+                    this.createInvoice(sale, newUser._id);
+                  }
                 },
-                error: (error) => {
-                  console.error('Erreur lors de la création du nouvel utilisateur:', error);
-                },
+                error: (error) => console.error('Erreur lors de la récupération des utilisateurs:', error),
               });
-            }
-          },
-          error: (error) => console.error('Erreur lors de la récupération des ventes :', error),
-        });
+            },
+            error: (error) => console.error('Erreur lors de la création du nouvel utilisateur:', error),
+          });
+        }
       },
       error: (error) => console.error('Erreur lors de l\'ajout de la vente:', error),
     });
-  
-    // Mise à jour des jeux et des stocks (inchangé dans cette partie)
+
     this.cartGames.forEach(gameLabel => {
       const sellerId = gameLabel.seller_id;
       const eventId = gameLabel.event_id;
       const earned = parseFloat((gameLabel.price * (1 - this.eventCommission / 100)).toFixed(2));
-  
+
+      // Vérifier si sellerId et eventId sont valides
       if (!sellerId || !eventId || !earned) {
         console.warn(`GameLabel avec ID ${gameLabel._id} est invalide ou incomplet.`);
         return;
       }
   
+      // Récupérer le rapport correspondant à l'événement et au vendeur
       this.reportService.getReportByEventIdAndSellerId(eventId, sellerId).subscribe({
         next: (report: Report) => {
           if (report) {
+            // Mettre à jour les gains et réduire le montant dû
             const updatedReport: Partial<Report> = {
               total_earned: report.total_earned + earned,
-              total_due: report.total_due + earned,
+              total_due: report.total_due + earned, // Empêcher total_due d'être négatif
             };
   
+            // Mettre à jour le rapport via le service
             this.reportService.updateReport(report._id, updatedReport).subscribe({
               next: (updated: any) => {
                 console.log(`Report mis à jour avec succès :`, updated);
@@ -361,6 +308,7 @@ export class SaleComponent {
         },
       });
   
+      // Mettre à jour les états du GameLabel
       const updatedGameLabel = {
         is_Sold: true,
         is_On_Sale: false,
@@ -384,6 +332,7 @@ export class SaleComponent {
         return;
       }
   
+      // Récupérer le stock associé au vendeur
       this.stockService.getStocksBySellerId(sellerId).subscribe({
         next: (stock: Stock) => {
           if (!stock || !stock._id) {
@@ -393,6 +342,7 @@ export class SaleComponent {
   
           console.log(`Stock trouvé pour le vendeur ${sellerId} :`, stock);
   
+          // Utiliser la fonction sellGame pour mettre à jour le stock
           this.stockService.sellGame(sellerId, [gameLabel]);
         },
         error: (error) => {
@@ -400,16 +350,15 @@ export class SaleComponent {
         },
       });
     });
-  
+    // Optionnel : vider le panier après la mise à jour
     this.cartGames = [];
     console.log('Mise à jour terminée, le panier est vidé.');
   }
-  
 
   // Méthode pour créer une facture
-  createInvoice(saleId: string, buyerId: string): void {
+  createInvoice(sale: Sale, buyerId: string): void {
     const newInvoice: Omit<Invoice, '_id'> = {
-      sale_id: saleId,
+      sale_id: sale,
       buyer_id: buyerId,
     };
 

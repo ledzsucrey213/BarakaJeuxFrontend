@@ -1,10 +1,4 @@
 <div class="container">
-  <!-- Top Navigation -->
-  <div class="top-nav">
-    <button class="nav-button">Total stocks</button>
-    <button class="nav-button">{{ eventName }}</button>
-    <button class="nav-button">ENDS IN {{ remainingTime }}</button>
-  </div>
 
 <!-- Main Content -->
 <div class="main-content">
@@ -18,7 +12,7 @@
       </div>
   
       <!-- List of registered games -->
-      <div *ngFor="let gameLabel of gamesInStock" class="game-entry">
+      <div *ngFor="let gameLabel of getPaginatedGameLabelsInStock()" class="game-entry">
         <input 
           type="checkbox" 
           [value]="gameLabel" 
@@ -29,6 +23,22 @@
           <div><span>Cost:</span> {{ gameLabel.price }} €</div>
           <div><span>Condition:</span> {{ gameLabel.condition }}</div>
       </div>
+      
+        <button 
+          class="pagination-button" 
+          (click)="goToPreviousPageInStock()" 
+          [disabled]="currentPageInStock === 1">
+          Previous
+        </button>
+        
+        <span>Page {{ currentPageInStock }} </span>
+        
+        <button 
+          class="pagination-button" 
+          (click)="goToNextPageInStock()" 
+          [disabled]="currentPageInStock * gamesPerPage >= gamesInStock.length">
+          Next
+        </button>
 
       <div class="action-buttons">
         <button (click)="processSelectedGames()">Reclaim</button>
@@ -54,11 +64,27 @@
       </div>
 
       <!-- List of registered games -->
-      <div *ngFor="let gameLabel of gamesSold" class="game-entry">
+      <div *ngFor="let gameLabel of getPaginatedGameLabelsSold()" class="game-entry">
         <div><span>Game:</span> {{ gamesNames[gameLabel.game_id] }}</div>
         <div><span>Cost:</span> {{ gameLabel.price }} €</div>
         <div><span>Condition:</span> {{ gameLabel.condition }}</div>
       </div>
+        <button 
+          class="pagination-button" 
+          (click)="goToPreviousPageSold()" 
+          [disabled]="currentPageSold === 1">
+          Previous
+        </button>
+        
+        <span>Page {{ currentPageSold }} </span>
+        
+        <button 
+          class="pagination-button" 
+          (click)="goToNextPageSold()" 
+          [disabled]="currentPageSold * gamesPerPage >= gamesSold.length">
+          Next
+        </button>
+
     </div>
   </div>
 </div>

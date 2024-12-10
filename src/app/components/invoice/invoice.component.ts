@@ -11,6 +11,7 @@ import { Game } from '../../models/game/game';
 import { GameService } from '../../services/game/game.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { GameLabelService } from '../../services/game_label/game-label.service';
 
 @Component({
   selector: 'app-invoice',
@@ -27,15 +28,17 @@ export class InvoiceComponent implements OnInit {
   salesIds : { [key : string] : string} = {};
   salesDates: { [key: string]: Date } = {};
   salesPrices: { [key: string]: number } = {};
-  salesGames: { [key : string]: GameLabel[] } = {};
+  salesGamesId: { [key : string]: string[] } = {};
   salesGamesNames : { [key : string] : string } = {};
+  salesGamesConditions : { [key : string] : string } = {};
+  salesGamesPrices : { [key : string] : number } = {};
 
   constructor(private router : Router, 
     private invoiceService : InvoiceService,
     private saleService : SaleService, 
     private cdr : ChangeDetectorRef,
-    private gameService : GameService,
-    private route : ActivatedRoute) {}
+    private route : ActivatedRoute,
+    private gameLabelService : GameLabelService) {}
   
   ngOnInit(): void {
     // Récupérer l'ID du jeu depuis l'URL
@@ -56,7 +59,7 @@ export class InvoiceComponent implements OnInit {
             this.invoices.forEach((invoice) => {
                 if (invoice.sale_id) {
                     console.log(`${invoice.sale_id}`);
-                    this.fetchSaleInfos(invoice.sale_id);
+                    this.fetchSaleInfos(invoice.sale_id, invoice._id);
                 } else {
                     console.warn(`Aucune sale_id trouvée pour la facture avec l'ID : ${invoice._id}`);
                 }
@@ -69,38 +72,44 @@ export class InvoiceComponent implements OnInit {
 }
 
   // Méthode pour récupérer le nom complet du vendeur (nom + prénom)
-  fetchSaleInfos(sale_id: string): void {
+  fetchSaleInfos(sale_id: Sale, invoiceId : string): void {
     console.log(`Fetching seller for seller_id: ${sale_id}`);  // Log pour vérifier si le seller_id est bien passé
-    this.saleService.getSaleById(sale_id).subscribe({
-      next: (sale: Sale) => {
-        this.salesDates[sale_id] = new Date(sale.sale_date);
-        this.salesPrices[sale_id] = sale.total_price;
-        this.salesGames[sale_id] = sale.games_id;
-        this.fetchGameDetails(sale.games_id);
+    if (sale_id) {
+        this.salesDates[invoiceId] = new Date(sale_id.sale_date);
+        console.log(`${this.salesDates[invoiceId]}`)
+        this.salesPrices[invoiceId] = sale_id.total_price;
+        this.salesGamesId[invoiceId] = String(sale_id.games_id).split(',');
+        this.fetchGameDetails(this.salesGamesId[invoiceId]);
         this.cdr.detectChanges();  // Assurez-vous que la vue est mise à jour après modification
-      },
-      error: (error) => {
-        console.error(`Erreur`, error);
-      },
-    });
+    }
+
   }
 
-  fetchGameDetails(games: GameLabel[]): void {
-
+  fetchGameDetails(games: string[]): void {
     games.forEach((gameLabel) => {
-        const gameId = gameLabel._id; // Supposons que 'id' est la propriété d'identifiant
-
-        this.gameService.getGameById(gameId).subscribe({
-            next: (game: Game) => {
-                // Stocke le nom du jeu dans salesGamesNames avec l'ID comme clé
-                this.salesGamesNames[gameId] = game.name; // Supposons que 'name' est la propriété contenant le nom du jeu
+      const gameId = gameLabel; // Supposons que '_id' est la propriété d'identifiant
+  
+      this.gameLabelService.getGameLabelById(gameId).subscribe({
+        next: (game: GameLabel) => {
+          this.salesGamesConditions[gameId]=game.condition;
+          this.salesGamesPrices[gameId]=game.price;
+          // Utilise getNameOfGameLabel pour récupérer le nom du jeu
+          this.gameLabelService.getNameOfGameLabel(game.game_id).subscribe({
+            next: (name: string) => {
+              // Stocke le nom du jeu dans salesGamesNames avec l'ID comme clé
+              this.salesGamesNames[gameId] = name;
             },
             error: (error) => {
-                console.error(`Erreur lors de la récupération du jeu avec ID ${gameId}:`, error);
+              console.error(`Erreur lors de la récupération du nom du jeu pour ID ${gameId}:`, error);
             },
-        });
+          });
+        },
+        error: (error) => {
+          console.error(`Erreur lors de la récupération de GameLabel avec ID ${gameId}:`, error);
+        },
+      });
     });
-}
+  }  
 
 
 generatePDF(invoiceId: string, saleId: string): void {
@@ -108,22 +117,22 @@ generatePDF(invoiceId: string, saleId: string): void {
   const doc = new jsPDF();
 
   // Vérifiez que saleId correspond à une clé valide dans les objets this.salesDates et this.salesPrices
-  const saleDate = this.salesDates[saleId] || "Date de vente inconnue"; // Fallback si saleId n'existe pas
-  const salePrice = this.salesPrices[saleId] || "Prix inconnu";
+  const saleDate = this.salesDates[invoiceId] || "Date de vente inconnue"; // Fallback si saleId n'existe pas
+  const salePrice = this.salesPrices[invoiceId] || "Prix inconnu";
 
   // Récupérez la liste des jeux associés à cette vente
-  const games = this.salesGames[saleId] || []; // Fallback si aucun jeu n'est trouvé
+  const games = this.salesGamesId[invoiceId] || []; // Fallback si aucun jeu n'est trouvé
 
   // Construisez le texte principal avec la date de la vente et le prix total
   let text = `Date de la vente : ${saleDate}\nPrix total : ${salePrice}\n\nJeux achetés :\n`;
 
   // Parcourez les jeux pour ajouter leurs détails (nom, prix, condition) au texte
-  games.forEach((game: GameLabel) => {
-      const gameName = this.salesGamesNames[game._id] || "Nom du jeu inconnu"; // Récupérez le nom du jeu à partir du tableau
-      const gamePrice = game.price || "Prix inconnu"; // Vérifiez si le prix est défini
-      const gameCondition = game.condition || "Condition inconnue"; // Vérifiez si la condition est définie
+  games.forEach((game: string) => {
+      const gameName = this.salesGamesNames[game] || "Nom du jeu inconnu"; // Récupérez le nom du jeu à partir du tableau
+      const gamePrice = this.salesGamesPrices[game] || "Prix inconnu"; // Vérifiez si le prix est défini
+      const gameCondition = this.salesGamesConditions[game] || "Condition inconnue"; // Vérifiez si la condition est définie
 
-      text += `- ${gameName} : ${gamePrice}, ${gameCondition}\n`;
+      text += `- nom : ${gameName}, prix : ${gamePrice} €, état : ${gameCondition}\n`;
   });
 
   // Ajoutez le texte au document PDF

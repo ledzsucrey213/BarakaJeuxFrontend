@@ -23,6 +23,9 @@ import { RouterModule } from '@angular/router';
 export class StockComponent implements OnInit, OnDestroy {
   gamesSold: GameLabel[] = [];
   gamesInStock: GameLabel[] = [];
+  currentPageInStock: number = 1; // Page actuelle
+  currentPageSold: number = 1; // Page actuelle
+  gamesPerPage: number = 5; // Nombre de jeux par page
   sellerId: User = new User({
     _id: '0',               // Placeholder ID
     firstname: 'Placeholder', // Placeholder name
@@ -34,8 +37,6 @@ export class StockComponent implements OnInit, OnDestroy {
   
   eventId: string = '';
   eventName: string = '';  // Variable pour stocker le nom du jeu
-  remainingTime: string = '';
-  private timer: any; // Pour stocker l'identifiant du setInterval
   totalStock: Stock = new Stock({
     _id: '',
     games_id: [],
@@ -67,9 +68,6 @@ export class StockComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // Nettoyer le timer lorsque le composant est détruit
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
   }
 
   fetchEventDetails(): void {
@@ -78,11 +76,6 @@ export class StockComponent implements OnInit, OnDestroy {
         this.eventName = session.name;  // Stocker le nom de la session
         this.eventId = session._id;
         console.log(`Fetching game for event_id ${session._id}`);
-        this.calculateRemainingTime(new Date(session.end)); // Calcul initial
-
-        if (typeof window !== 'undefined') {
-          this.startTimer(new Date(session.end)); 
-        }
       },
       error: (error) => {
         console.error('Erreur lors de la récupération de la session :', error);
@@ -102,34 +95,6 @@ export class StockComponent implements OnInit, OnDestroy {
     });
   }
 
-  calculateRemainingTime(endDate: Date): void {
-    const now = new Date();
-    const difference = endDate.getTime() - now.getTime();
-
-    if (difference <= 0) {
-      this.remainingTime = 'Session terminée';
-      if (this.timer) {
-        clearInterval(this.timer);
-      }
-      return;
-    }
-
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-
-    this.remainingTime = `${days} jours, ${hours} heures, ${minutes} minutes`;
-  }
-
-  startTimer(endDate: Date): void {
-    if (this.timer) {
-      clearInterval(this.timer); 
-    }
-
-    this.timer = setInterval(() => {
-      this.calculateRemainingTime(endDate);
-    }, 60000); 
-  }
 
   fetchGamesInStock(sellerId: string): void {
     this.stockService.getStocksBySellerId(sellerId).subscribe({
@@ -168,6 +133,42 @@ export class StockComponent implements OnInit, OnDestroy {
         console.error('Erreur lors de la récupération du stock :', error);
       },
     });
+  }
+
+  getPaginatedGameLabelsInStock(): GameLabel[] {
+    const startIndex = (this.currentPageInStock - 1) * this.gamesPerPage;
+    const endIndex = startIndex + this.gamesPerPage;
+    return this.gamesInStock.slice(startIndex, endIndex);
+  }
+
+  getPaginatedGameLabelsSold(): GameLabel[] {
+    const startIndex = (this.currentPageSold - 1) * this.gamesPerPage;
+    const endIndex = startIndex + this.gamesPerPage;
+    return this.gamesSold.slice(startIndex, endIndex);
+  }
+
+  goToNextPageInStock(): void {
+    if (this.currentPageInStock * this.gamesPerPage < this.gamesInStock.length) {
+      this.currentPageInStock++;
+    }
+  }
+
+  goToNextPageSold(): void {
+    if (this.currentPageSold * this.gamesPerPage < this.gamesSold.length) {
+      this.currentPageSold++;
+    }
+  }
+  
+  goToPreviousPageSold(): void {
+    if (this.currentPageSold > 1) {
+      this.currentPageSold--;
+    }
+  }
+
+  goToPreviousPageInStock(): void {
+    if (this.currentPageInStock > 1) {
+      this.currentPageInStock--;
+    }
   }
 
   fetchGamesSold(sellerId: string): void {
