@@ -34,13 +34,17 @@
       <div class="search-type-buttons">
         <button 
           (click)="setSearchType('seller')" 
-          [ngClass]="{'button-selected': selectedSearchType === 'seller'}">
+          [ngClass]="{
+            'button-selected': selectedSearchType === 'seller',
+            'button-unselected': selectedSearchType !== 'seller'}">
           Rechercher un Seller
         </button>
       
         <button 
           (click)="setSearchType('buyer')" 
-          [ngClass]="{'button-selected': selectedSearchType === 'buyer'}">
+          [ngClass]="{
+            'button-selected': selectedSearchType === 'buyer',
+            'button-unselected': selectedSearchType !== 'buyer'}">
           Rechercher un Client
         </button>
       </div>

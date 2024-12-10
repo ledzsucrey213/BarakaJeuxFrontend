@@ -187,7 +187,31 @@ $button-text-color: white;
         color: white; // Maintenir le contraste
         font-weight: bold; // Accentuer visuellement le bouton actif
         border: 2px solid #002a70; // Optionnel : ajouter un contour pour différencier
+        font-size: 14px;
+        padding: 8px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
       }
+
+      .button-unselected {
+        background-color: $hover-bg-color; // Couleur un peu plus sombre pour indiquer la sélection
+        color: $text-color; // Maintenir le contraste
+        font-weight: bold; // Accentuer visuellement le bouton actif
+        border: 2px solid #002a70; // Optionnel : ajouter un contour pour différencier
+        font-size: 14px;
+        padding: 8px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+      }
+
       
       button {
         margin: 5px; // Un espacement pour une mise en page claire
