@@ -33,12 +33,6 @@ export class UserService {
     );
   }
 
-  // Méthode pour se connecter (administrateur ou manager)
-  login(name: string, password: string): Observable<{ message: string; token: string }> {
-    const loginData = { name, password };
-    return this.http.post<{ message: string; token: string }>(`${this.apiUrl}/login`, loginData);
-  }
-
   getUserById(id: string): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/${id}`).pipe(
       map((json) => User.createFrom(json)) // Mapper l'objet JSON au modèle Game
@@ -52,4 +46,10 @@ export class UserService {
   postUser(user: Omit<User, '_id'>): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/`, user);
   }
+
+  login(name: string, password: string): Observable<{ message: string; token: string }> {
+    const loginData = { name, password };
+    return this.http.post<{ message: string; token: string }>(`${this.apiUrl}/login`, loginData, { withCredentials: true });
+  }
+  
 }
