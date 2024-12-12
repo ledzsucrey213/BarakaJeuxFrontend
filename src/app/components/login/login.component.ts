@@ -2,10 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { truncateSync } from 'fs';
 import { UserService } from '../../services/user/user.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   standalone : true
@@ -19,6 +21,7 @@ export class LoginComponent {
 
   login(): void {
 
+    console.log('Form values:', this.name, this.password);
     this.userService.login(this.name, this.password).subscribe({
       next: (response) => {
         console.log('Login successful:', response.message);

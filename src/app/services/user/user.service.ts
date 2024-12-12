@@ -49,7 +49,14 @@ export class UserService {
 
   login(name: string, password: string): Observable<{ message: string; token: string }> {
     const loginData = { name, password };
-    return this.http.post<{ message: string; token: string }>(`${this.apiUrl}/login`, loginData, { withCredentials: true });
-  }
+    return this.http.post<{ message: string; token: string }>(
+        `${this.apiUrl}/login`,
+        loginData,
+        {
+          withCredentials: true, // Indispensable pour envoyer les cookies
+          headers: { 'Content-Type': 'application/json' },
+        }
+    );
+}
   
 }
