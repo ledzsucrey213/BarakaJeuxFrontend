@@ -232,14 +232,18 @@ export class FinancialReportComponent implements OnInit {
 
     // Ajoutez du texte à votre document PDF
     // Add the attributes of the financial report to the PDF
-    doc.text('Financial Report', 10, 10);
-    doc.text(`Total Earned: ${this.total_earned || 0} €`, 10, 20);
-    doc.text(`Total Due: ${this.total_due || 0} €`, 10, 30);
-    doc.text(`Report Date: ${this.report_date ? new Date(this.report_date).toLocaleDateString() : 'Not generated yet'}`, 10, 40);
-    doc.text(`Games in Stock: ${this.games_in_stock || 0}`, 10, 50);
+    doc.text(`Financial Report : ${this.eventName}`, 10, 10);
+    doc.text(`Seller : ${this.sellerId.firstname} ${this.sellerId.name}`, 10, 20);
+    doc.text(`Total Earned: ${this.total_earned || 0} €`, 10, 30);
+    doc.text(`Total Due: ${this.total_due || 0} €`, 10, 40);
+    doc.text(`Report Date: ${this.report_date ? new Date(this.report_date).toLocaleDateString() : 'Not generated yet'}`, 10, 50);
+    doc.text(`Games in Stock: ${this.games_in_stock || 0}`, 10, 60);
 
-    // Téléchargez le PDF avec le nom "Yanis_and_Jalil.pdf"
-    doc.save('Yanis_and_Jalil.pdf');
+    const formattedEventName = (this.eventName || '').toLowerCase().replace(/\s+/g, '');
+
+
+    // Téléchargez le PDF avec le nom "financial_report.pdf"
+    doc.save(`financial_report_${formattedEventName}.pdf`);
   }
   
 }

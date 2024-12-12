@@ -139,7 +139,7 @@ generatePDF(invoiceId: string, saleId: string): void {
   doc.text(text, 10, 10); // Position du texte
 
   // Téléchargez le fichier PDF avec un nom basé sur l'ID de la facture
-  doc.save(`${invoiceId}.pdf`);
+  doc.save(`invoice_${saleId}.pdf`);
 }
 
 
