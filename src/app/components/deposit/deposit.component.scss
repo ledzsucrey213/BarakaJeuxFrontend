@@ -127,6 +127,19 @@
           text-align: center;
         }
 
+        .pagination-button {
+          padding: 5px 10px;
+          background-color: #0044b2;
+          color: #fff;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          margin: 5px;
+        
+          &:hover {
+            background-color: #0056b3;
+          }
+        }
         .empty-list {
           text-align: center;
           color: gray;
