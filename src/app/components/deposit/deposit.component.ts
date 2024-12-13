@@ -14,6 +14,8 @@ import { forkJoin, debounceTime, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Stock } from '../../models/stock/stock';
 import { stockService } from '../../services/stock/stock.service';
+import { Report } from '../../models/report/report';
+import { ReportService } from '../../services/report/report.service';
 
 @Component({
   selector: 'app-deposit',
@@ -50,7 +52,8 @@ export class DepositComponent implements OnInit, OnDestroy {
     private gameService: GameService,
     private cdr: ChangeDetectorRef,  // Injecter ChangeDetectorRef
     private eventService: EventService,
-    private stockService : stockService
+    private stockService : stockService,
+     private reportService : ReportService
   ) {}
 
   ngOnInit(): void {
@@ -289,6 +292,7 @@ export class DepositComponent implements OnInit, OnDestroy {
   
         // Appeler addNewGameLabelToStock après la publication complète
         this.stockService.addNewGameLabelToStock(this.sellerId);
+        this.stockService.addNewGameLabelToStock("675c75c5cd3b594a7528034f");
   
         // Réinitialiser la liste après le succès
         this.addedGamesLabels = [];
@@ -297,6 +301,36 @@ export class DepositComponent implements OnInit, OnDestroy {
         console.error('Erreur lors du dépôt des jeux :', error);
       },
     });
+
+      this.reportService.getReportByEventIdAndSellerId(this.eventId, "675c75c5cd3b594a7528034f").subscribe({
+        next: (report: Report) => {
+          if (report) {
+            // Mettre à jour les gains et réduire le montant dû
+            const updatedReport: Partial<Report> = {
+              total_earned: report.total_earned + this.calculateTotal(),
+              total_due: report.total_due + this.calculateTotal(), // Empêcher total_due d'être négatif
+            };
+  
+            // Mettre à jour le rapport général via le service
+            this.reportService.updateReport(report._id, updatedReport).subscribe({
+              next: (updated: any) => {
+                console.log(`Report mis à jour avec succès :`, updated);
+              },
+              error: (error: any) => {
+                console.error(`Erreur lors de la mise à jour du report avec ID ${report._id}:`, error);
+              },
+            });
+          } else {
+            console.warn(`Aucun rapport trouvé pour l'événement ${this.eventId} et le vendeur ${"675c75c5cd3b594a7528034f"}.`);
+          }
+        },
+        error: (error: any) => {
+          console.error(
+            `Erreur lors de la récupération du rapport pour l'événement ${this.eventId} et le vendeur ${"675c75c5cd3b594a7528034f"}:`,
+            error
+          );
+        },
+      });
   }
   
   

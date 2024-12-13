@@ -307,6 +307,39 @@ export class SaleComponent {
           );
         },
       });
+
+      // Récupérer le rapport correspondant à l'événement et au vendeur
+      this.reportService.getReportByEventIdAndSellerId(eventId, "675c75c5cd3b594a7528034f").subscribe({
+        next: (report: Report) => {
+          if (report) {
+            // Mettre à jour les gains et réduire le montant dû
+            const updatedReport: Partial<Report> = {
+              total_earned: report.total_earned + earned,
+              total_due: report.total_due + earned, // Empêcher total_due d'être négatif
+            };
+  
+            // Mettre à jour le rapport général via le service
+            this.reportService.updateReport(report._id, updatedReport).subscribe({
+              next: (updated: any) => {
+                console.log(`Report mis à jour avec succès :`, updated);
+              },
+              error: (error: any) => {
+                console.error(`Erreur lors de la mise à jour du report avec ID ${report._id}:`, error);
+              },
+            });
+          } else {
+            console.warn(`Aucun rapport trouvé pour l'événement ${eventId} et le vendeur ${"675c75c5cd3b594a7528034f"}.`);
+          }
+        },
+        error: (error: any) => {
+          console.error(
+            `Erreur lors de la récupération du rapport pour l'événement ${eventId} et le vendeur ${"675c75c5cd3b594a7528034f"}:`,
+            error
+          );
+        },
+      });
+
+      
   
       // Mettre à jour les états du GameLabel
       const updatedGameLabel = {
@@ -333,6 +366,23 @@ export class SaleComponent {
       }
   
       // Récupérer le stock associé au vendeur
+      this.stockService.getStocksBySellerId("675c75c5cd3b594a7528034f").subscribe({
+        next: (stock: Stock) => {
+          if (!stock || !stock._id) {
+            console.error(`Aucun stock trouvé pour le vendeur avec ID ${"675c75c5cd3b594a7528034f"}.`);
+            return;
+          }
+  
+          console.log(`Stock trouvé pour le vendeur ${"675c75c5cd3b594a7528034f"} :`, stock);
+  
+          // Utiliser la fonction sellGame pour mettre à jour le stock
+          this.stockService.sellGame("675c75c5cd3b594a7528034f", [gameLabel]);
+        },
+        error: (error) => {
+          console.error(`Erreur lors de la récupération du stock pour le vendeur ${"675c75c5cd3b594a7528034f"} :`, error);
+        },
+      });
+      // Récupérer le stock associé au vendeur
       this.stockService.getStocksBySellerId(sellerId).subscribe({
         next: (stock: Stock) => {
           if (!stock || !stock._id) {
@@ -349,6 +399,7 @@ export class SaleComponent {
           console.error(`Erreur lors de la récupération du stock pour le vendeur ${sellerId} :`, error);
         },
       });
+
     });
     // Optionnel : vider le panier après la mise à jour
     this.cartGames = [];
