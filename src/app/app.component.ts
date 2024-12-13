@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { UserService } from './services/user/user.service';
 import { User } from './models/user/user';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from './services/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -28,8 +29,9 @@ export class AppComponent implements OnInit {
   selectedRoute: string = ''; // Pour stocker la route sélectionnée (invoice, report, stock)
   searchType: 'seller' | 'buyer' | null = null;
   selectedSearchType: string = '';
+  isLoggedIn: boolean = false;
 
-  constructor(private router : Router, private eventService : EventService, private route : ActivatedRoute, private userService : UserService ) {}
+  constructor(private router : Router, private eventService : EventService, private authService : AuthService, private route : ActivatedRoute, private userService : UserService) {}
 
   ngOnInit(): void {
     this.fetchEventDetails();
@@ -40,6 +42,7 @@ export class AppComponent implements OnInit {
         const activeRoute = this.router.routerState.root;
         this.currentComponentName = this.getActiveComponentName(activeRoute);
       });
+    this.isLoggedIn = this.authService.isLoggedIn();
   }
 
   ngOnDestroy(): void {
@@ -161,7 +164,11 @@ export class AppComponent implements OnInit {
     this.showUserModal = false;
     this.searchClient = '';
     this.filteredClients = [];
-  }  
-
+  }
+  
+  logout(): void {
+    this.authService.logout();
+    this.navigateTo('/login'); 
+    this.isLoggedIn = false; }
 
 }

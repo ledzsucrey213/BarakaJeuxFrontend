@@ -1,4 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -6,23 +8,37 @@ import { Injectable } from '@angular/core';
 export class AuthService {
   private tokenKey = 'token';
 
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+
   // Enregistrer le token
   setToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(this.tokenKey, token);
+    }
   }
 
   // Récupérer le token
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem(this.tokenKey);
+    }
+    return null;
   }
 
   // Vérifier si l'utilisateur est connecté
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    if (isPlatformBrowser(this.platformId)) {
+      return !!this.getToken();
+    }
+    return false;
   }
 
   // Supprimer le token (déconnexion)
   logout(): void {
-    localStorage.removeItem(this.tokenKey);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(this.tokenKey);
+    }
   }
+
+  
 }

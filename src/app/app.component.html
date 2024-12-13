@@ -6,6 +6,7 @@
 
   <!-- Top Navigation -->
   <div class="top-nav">
+    <button class="nav-button" *ngIf="isLoggedIn" (click)="logout()">Déconnexion</button>
     <button class="nav-button">{{ currentComponentName }}</button>
     <button class="nav-button">{{ eventName }}</button>
     <button class="nav-button">FIN DANS {{ remainingTime }}</button>
