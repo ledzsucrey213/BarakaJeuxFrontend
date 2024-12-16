@@ -7,6 +7,9 @@ import { Event } from '../../models/event/event';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/user/user.service';
 import { EventService } from '../../services/event/event.service';
+import { GameLabelService } from '../../services/game_label/game-label.service';
+import { GameLabel } from '../../models/game_label/game-label';
+import { stockService } from '../../services/stock/stock.service';
 
 @Component({
   selector: 'app-admin',
@@ -43,7 +46,9 @@ export class AdminComponent {
     private route: ActivatedRoute,
     private userService : UserService,
     private cdr: ChangeDetectorRef,  // Injecter ChangeDetectorRef
-    private eventService: EventService
+    private eventService: EventService,
+    private gameLabelService: GameLabelService,
+    private stockService: stockService
   ) {}
 
 
@@ -186,11 +191,52 @@ toggleAddEventForm(): void {
   }
 }
 
+takeNotReclaimedGames(): void {
+  console.log("Fetching not reclaimed games...");
 
+  this.gameLabelService.getNotReclaimedGames(this.eventId).subscribe({
+    next: (games) => {
+      console.log("Jeux non récupérés :", games);
 
+      if (games.length === 0) {
+        console.log("Aucun jeu non récupéré trouvé.");
+        return;
+      }
 
+      let updatedCount = 0;
 
+      // Parcourir chaque jeu récupéré
+      games.forEach((game: GameLabel) => {
+        // Préparer les données de mise à jour
+        const updatedData: Partial<GameLabel> = {
+          event_id: this.eventId,
+          seller_id: "675c75c5cd3b594a7528034f",
+        };
 
+        // Effectuer la mise à jour
+        this.gameLabelService.updateGameLabel(game._id, updatedData).subscribe({
+          next: (updatedGame) => {
+            console.log(`Jeu mis à jour (ID: ${game._id}) :`, updatedGame);
 
+            // Incrémenter le compteur après chaque mise à jour réussie
+            updatedCount++;
+
+            // Si toutes les mises à jour sont terminées, appeler `addNewGameLabelToStock`
+            if (updatedCount === games.length) {
+              console.log("Toutes les mises à jour des jeux non récupérés sont terminées.");
+              this.stockService.addNewGameLabelToStock("675c75c5cd3b594a7528034f");
+            }
+          },
+          error: (error) => {
+            console.error(`Erreur lors de la mise à jour du jeu (ID: ${game._id}) :`, error);
+          },
+        });
+      });
+    },
+    error: (error) => {
+      console.error("Erreur lors de la récupération des jeux non récupérés :", error);
+    },
+  });
+}
 
 }

@@ -56,5 +56,9 @@ export class GameLabelService {
     );
   } 
   
+  getNotReclaimedGames(eventId: string): Observable<GameLabel[]> {
+    return this.http.get<any>(`${this.apiUrl}/not-reclaimed/${eventId}`);
+  }
+    
 
 }
