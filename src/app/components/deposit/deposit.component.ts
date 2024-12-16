@@ -292,7 +292,7 @@ export class DepositComponent implements OnInit, OnDestroy {
   
         // Appeler addNewGameLabelToStock après la publication complète
         this.stockService.addNewGameLabelToStock(this.sellerId);
-        this.stockService.addNewGameLabelToStock("675c75c5cd3b594a7528034f");
+        this.stockService.addNewGameLabelToStock("675b06588fb22316d3e6fb61");
   
         // Réinitialiser la liste après le succès
         this.addedGamesLabels = [];
@@ -302,7 +302,7 @@ export class DepositComponent implements OnInit, OnDestroy {
       },
     });
 
-      this.reportService.getReportByEventIdAndSellerId(this.eventId, "675c75c5cd3b594a7528034f").subscribe({
+      this.reportService.getReportByEventIdAndSellerId(this.eventId, "675b06588fb22316d3e6fb61").subscribe({
         next: (report: Report) => {
           if (report) {
             // Mettre à jour les gains et réduire le montant dû
@@ -321,12 +321,12 @@ export class DepositComponent implements OnInit, OnDestroy {
               },
             });
           } else {
-            console.warn(`Aucun rapport trouvé pour l'événement ${this.eventId} et le vendeur ${"675c75c5cd3b594a7528034f"}.`);
+            console.warn(`Aucun rapport trouvé pour l'événement ${this.eventId} et le vendeur ${"675b06588fb22316d3e6fb61"}.`);
           }
         },
         error: (error: any) => {
           console.error(
-            `Erreur lors de la récupération du rapport pour l'événement ${this.eventId} et le vendeur ${"675c75c5cd3b594a7528034f"}:`,
+            `Erreur lors de la récupération du rapport pour l'événement ${this.eventId} et le vendeur ${"675b06588fb22316d3e6fb61"}:`,
             error
           );
         },

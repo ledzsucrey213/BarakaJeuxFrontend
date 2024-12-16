@@ -309,7 +309,7 @@ export class SaleComponent {
       });
 
       // Récupérer le rapport correspondant à l'événement et au vendeur
-      this.reportService.getReportByEventIdAndSellerId(eventId, "675c75c5cd3b594a7528034f").subscribe({
+      this.reportService.getReportByEventIdAndSellerId(eventId, "675b06588fb22316d3e6fb61").subscribe({
         next: (report: Report) => {
           if (report) {
             // Mettre à jour les gains et réduire le montant dû
@@ -328,12 +328,12 @@ export class SaleComponent {
               },
             });
           } else {
-            console.warn(`Aucun rapport trouvé pour l'événement ${eventId} et le vendeur ${"675c75c5cd3b594a7528034f"}.`);
+            console.warn(`Aucun rapport trouvé pour l'événement ${eventId} et le vendeur ${"675b06588fb22316d3e6fb61"}.`);
           }
         },
         error: (error: any) => {
           console.error(
-            `Erreur lors de la récupération du rapport pour l'événement ${eventId} et le vendeur ${"675c75c5cd3b594a7528034f"}:`,
+            `Erreur lors de la récupération du rapport pour l'événement ${eventId} et le vendeur ${"675b06588fb22316d3e6fb61"}:`,
             error
           );
         },
@@ -366,20 +366,20 @@ export class SaleComponent {
       }
   
       // Récupérer le stock associé au vendeur
-      this.stockService.getStocksBySellerId("675c75c5cd3b594a7528034f").subscribe({
+      this.stockService.getStocksBySellerId("675b06588fb22316d3e6fb61").subscribe({
         next: (stock: Stock) => {
           if (!stock || !stock._id) {
-            console.error(`Aucun stock trouvé pour le vendeur avec ID ${"675c75c5cd3b594a7528034f"}.`);
+            console.error(`Aucun stock trouvé pour le vendeur avec ID ${"675b06588fb22316d3e6fb61"}.`);
             return;
           }
   
-          console.log(`Stock trouvé pour le vendeur ${"675c75c5cd3b594a7528034f"} :`, stock);
+          console.log(`Stock trouvé pour le vendeur ${"675b06588fb22316d3e6fb61"} :`, stock);
   
           // Utiliser la fonction sellGame pour mettre à jour le stock
-          this.stockService.sellGame("675c75c5cd3b594a7528034f", [gameLabel]);
+          this.stockService.sellGame("675b06588fb22316d3e6fb61", [gameLabel]);
         },
         error: (error) => {
-          console.error(`Erreur lors de la récupération du stock pour le vendeur ${"675c75c5cd3b594a7528034f"} :`, error);
+          console.error(`Erreur lors de la récupération du stock pour le vendeur ${"675b06588fb22316d3e6fb61"} :`, error);
         },
       });
       // Récupérer le stock associé au vendeur
