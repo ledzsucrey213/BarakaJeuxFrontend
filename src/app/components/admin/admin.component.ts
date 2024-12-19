@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../models/user/user';
 import { ChangeDetectorRef } from '@angular/core';
 import { Event } from '../../models/event/event';
@@ -44,6 +44,7 @@ export class AdminComponent {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private userService : UserService,
     private cdr: ChangeDetectorRef,  // Injecter ChangeDetectorRef
     private eventService: EventService,
@@ -237,6 +238,10 @@ takeNotReclaimedGames(): void {
       console.error("Erreur lors de la récupération des jeux non récupérés :", error);
     },
   });
+}
+
+navigateTo(route : string) {
+  this.router.navigate([`/${route}`]) // Redirige vers /search-seller
 }
 
 }
