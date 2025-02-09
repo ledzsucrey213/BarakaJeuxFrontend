@@ -38,6 +38,7 @@ export class AdminComponent {
   // Propriétés pour gérer l'édition d'utilisateur
   selectedUserId: string | null = null; // ID de l'utilisateur sélectionné pour édition
   editUserForm: Partial<User> = {}; // Données du formulaire d'édition
+  isAdmin : boolean = false;
 
 
 
@@ -54,11 +55,14 @@ export class AdminComponent {
 
 
   ngOnInit(): void {
+    this.checkIfAdmin();
     this.fetchEventDetails();
     this.fetchUsers();
     this.fetchEvents();
     this.minStartDate = new Date().toISOString().slice(0, 16);
   }
+
+
 
   ngOnDestroy(): void {
   }
@@ -244,4 +248,12 @@ navigateTo(route : string) {
   this.router.navigate([`/${route}`]) // Redirige vers /search-seller
 }
 
+
+// Vérifier si l'utilisateur actuel est un admin
+checkIfAdmin(): void {
+  this.isAdmin=this.userService.isUserAdmin();
 }
+
+}
+
+

@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { User } from '../../models/user/user';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
+import { jwtDecode } from 'jwt-decode';
+
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +13,7 @@ import { map } from 'rxjs/operators';
 export class UserService {
   private apiUrl = 'http://localhost:3000/api/user'; // URL de l'API backend
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService : AuthService) {}
 
   // Récupérer tous les vendeurs
   getSellers(): Observable<User[]> {
@@ -59,4 +62,35 @@ export class UserService {
     );
 }
   
+isUserAdmin(): boolean {
+  const token = this.authService.getToken();
+  if (!token) {
+    return false; // Si aucun token n'est trouvé, l'utilisateur n'est pas authentifié
+  }
+
+  // Décodons le token pour récupérer l'attribut 'role'
+  const decodedToken = this.decodeToken(token);
+
+  // Vérification si l'attribut 'role' est 'admin'
+  if (decodedToken && decodedToken.role === 'admin') {
+    return true;
+  }
+
+  return false; // Si le rôle n'est pas 'admin' ou si le décodage a échoué
+}
+
+// Fonction de décodage du token
+private decodeToken(token: string): any {
+  try {
+    // Utilisation de jwt-decode pour décoder le token JWT
+    const decoded = jwtDecode(token); // Assurez-vous d'avoir installé 'jwt-decode'
+    return decoded;
+  } catch (e) {
+    console.error("Erreur lors du décodage du token", e);
+    return null;
+  }
+}
+
+
+
 }

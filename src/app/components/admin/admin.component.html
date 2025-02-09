@@ -1,14 +1,19 @@
+<!-- admin.component.html -->
 <div class="admin-container">
-   
+  <!-- Vérifier si l'utilisateur est un admin -->
+  <div *ngIf="!isAdmin" class="not-admin">
+    <h2>You're not an admin</h2>
+  </div>
+
+  <div *ngIf="isAdmin">
     <!-- SECTION EVENTS -->
     <div class="section">
-      <!-- SECTION EVENTS -->
-    <div class="section">
-      <div class="event-form">        
-      <button (click)="toggleAddEventForm()">
-        {{ showAddEventForm ? 'Cancel' : 'Add Event' }}
-      </button>
+      <div class="event-form">
+        <button (click)="toggleAddEventForm()">
+          {{ showAddEventForm ? 'Cancel' : 'Add Event' }}
+        </button>
       </div>
+
       <!-- Formulaire d'ajout d'événement -->
       <div *ngIf="showAddEventForm" class="add-event-form">
         <label>
@@ -17,17 +22,11 @@
         </label>
         <label>
           Start Date:
-          <input
-            type="datetime-local"
-            [(ngModel)]="newEvent.start"
-            [min]="minStartDate" />
+          <input type="datetime-local" [(ngModel)]="newEvent.start" [min]="minStartDate" />
         </label>
         <label>
           End Date:
-          <input
-            type="datetime-local"
-            [(ngModel)]="newEvent.end"
-            [min]="newEvent.start ? newEvent.start.toISOString().slice(0,16) : minStartDate" />
+          <input type="datetime-local" [(ngModel)]="newEvent.end" [min]="newEvent.start ? newEvent.start.toISOString().slice(0,16) : minStartDate" />
         </label>
         <label>
           Commission Rate (%):
@@ -39,6 +38,7 @@
         </label>
         <button (click)="addEvent()">Save Event</button>
       </div>
+
       <h2>Events :</h2>
       <div *ngFor="let event of events" class="event-details">
         <p><strong>Name:</strong> {{ event.name }}</p>
@@ -46,7 +46,7 @@
         <p><strong>End:</strong> {{ event.end }}</p>
       </div>
     </div>
-  
+
     <!-- SECTION USERS -->
     <div class="section">
       <h2>Users :</h2>
@@ -72,46 +72,14 @@
           </tr>
         </tbody>
       </table>
-      <div *ngIf="selectedUserId" class="edit-user-form">
-        <h3>Modifier l'utilisateur</h3>
-        <label>
-          Prénom:
-          <input type="text" [(ngModel)]="editUserForm.firstname" />
-        </label>
-        <label>
-          Nom:
-          <input type="text" [(ngModel)]="editUserForm.name" />
-        </label>
-        <label>
-          Email:
-          <input type="email" [(ngModel)]="editUserForm.email" />
-        </label>
-        <label>
-          Adresse:
-          <input type="text" [(ngModel)]="editUserForm.address" />
-        </label>
-        <label>
-          Rôle:
-          <select [(ngModel)]="editUserForm.role">
-            <option value="seller">Seller</option>
-            <option value="buyer">Buyer</option>
-            <option value="admin">Admin</option>
-            <option value="manager">Manager</option>
-          </select>
-        </label>
-        <button (click)="updateUser()">Sauvegarder</button>
-        <button (click)="resetEditForm()">Annuler</button>
-      </div>      
     </div>
 
+    <!-- SECTION STOCK -->
     <div class="section">
       <h2>Stock :</h2>
       <button (click)="takeNotReclaimedGames()">Récupérer les jeux non réclamés</button>
-      <p>
       <button (click)="navigateTo('stock/675b06588fb22316d3e6fb61')">Stock du magasin</button>
-      <p></p>
       <button (click)="navigateTo('financialreport/675b06588fb22316d3e6fb61')">Bilan financier du magasin</button>
-
-   </div>
+    </div>
   </div>
-  
+</div>
