@@ -11,7 +11,7 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:3000/api/user'; // URL de l'API backend
+  private apiUrl = 'http://barakajeuxbackend.cluster-ig4.igpolytech.fr/api/user'; // URL de l'API backend
 
   constructor(private http: HttpClient, private authService : AuthService) {}
 

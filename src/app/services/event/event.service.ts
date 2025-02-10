@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root', // Injection globale
 })
 export class EventService {
-  private apiUrl = 'http://localhost:3000/api/event'; // URL de l'API backend
+  private apiUrl = 'http://barakajeuxbackend.cluster-ig4.igpolytech.fr/api/event'; // URL de l'API backend
 
   constructor(private http: HttpClient) {}
 

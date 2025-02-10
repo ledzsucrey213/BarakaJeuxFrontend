@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root', // Injection globale
 })
 export class GameService {
-  private apiUrl = 'http://localhost:3000/api/game'; // URL de l'API backend
+  private apiUrl = 'http://barakajeuxbackend.cluster-ig4.igpolytech.fr/api/game'; // URL de l'API backend
 
   constructor(private http: HttpClient) {}
 

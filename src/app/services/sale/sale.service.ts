@@ -8,7 +8,7 @@ import { Sale } from '../../models/sale/sale';
   providedIn: 'root',
 })
 export class SaleService {
-  private apiUrl = 'http://localhost:3000/api/sale'; // URL de l'API backend
+  private apiUrl = 'http://barakajeuxbackend.cluster-ig4.igpolytech.fr/api/sale'; // URL de l'API backend
 
   constructor(private http: HttpClient) {}
 

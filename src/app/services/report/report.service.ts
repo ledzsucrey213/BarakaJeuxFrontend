@@ -8,7 +8,7 @@ import { Report } from '../../models/report/report';
   providedIn: 'root',
 })
 export class ReportService {
-  private apiUrl = 'http://localhost:3000/api/report'; // URL de l'API backend
+  private apiUrl = 'http://barakajeuxbackend.cluster-ig4.igpolytech.fr/api/report'; // URL de l'API backend
 
   constructor(private http: HttpClient) {}
 

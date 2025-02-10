@@ -8,7 +8,7 @@ import { Invoice } from '../../models/invoice/invoice';
   providedIn: 'root',
 })
 export class InvoiceService {
-  private apiUrl = 'http://localhost:3000/api/invoice'; // URL de l'API backend
+  private apiUrl = 'http://barakajeuxbackend.cluster-ig4.igpolytech.fr/api/invoice'; // URL de l'API backend
 
   constructor(private http: HttpClient) {}
 

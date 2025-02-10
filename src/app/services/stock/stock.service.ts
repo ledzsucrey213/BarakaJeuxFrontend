@@ -10,7 +10,7 @@ import { GameLabelService } from '../game_label/game-label.service';
   providedIn: 'root',
 })
 export class stockService {
-  private apiUrl = 'http://localhost:3000/api/stock'; // URL de l'API backend
+  private apiUrl = 'http://barakajeuxbackend.cluster-ig4.igpolytech.fr/api/stock'; // URL de l'API backend
 
   constructor(private http: HttpClient, private gameLabelService : GameLabelService) {
     
